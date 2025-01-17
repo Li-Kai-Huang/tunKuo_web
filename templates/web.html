@@ -180,12 +180,14 @@
         if (option === "Panel") {
           document.getElementById("content").innerHTML = `
                     <div class="tab">
-                        <button class="tablinks" onclick="openTab(event, 'CPU')">CPU</button>
-                        <button class="tablinks" onclick="openTab(event, 'GPU')">GPU</button>
+                        <button class="tablinks" onclick="openTab(event, 'info')">INFO</button>
+                        <button class="tablinks" onclick="openTab(event, 'control')">CONTROL</button>
                     </div>
-                    <div id="CPU" class="tabcontent">
+                    <div id="info" class="tabcontent">
                         <h3>CPU 資訊</h3>
                         <pre id= "cpu_data">載入中...</pre>
+                        <h3>GPU 資訊</h3>
+                        <pre id= "gpu_data">載入中...</pre>
                     </div>
                     <div id="GPU" class="tabcontent">
                         <h3>GPU 資訊</h3>
@@ -250,19 +252,6 @@
           document.getElementById("content").innerHTML = `<p>資料未找到</p>`;
         }
       }
-      function fetchData(type) {
-        fetch(`/panel/${type}`)
-          .then((response) => response.json())
-          .then((data) => {
-            document.getElementById(type).innerHTML = `
-                        <h3>${type} 資訊</h3>
-                        <p>${data.description}</p>
-                    `;
-          })
-          .catch((error) => {
-            document.getElementById(type).innerHTML = `<p>資料獲取失敗</p>`;
-          });
-      }
 
       function uploadFile() {
         const formData = new FormData(document.getElementById("uploadForm"));
@@ -278,11 +267,9 @@
             alert("檔案上傳失敗");
           });
       }
-
       function downloadFile(filename) {
         window.location.href = `/download?filename=${filename}`;
       }
-
       function fetchFileContent() {
         const filename = document.getElementById("fileSelect").value;
         fetch(`/files?filename=${filename}`)
@@ -376,11 +363,11 @@
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "success") {
-              document.getElementById(`${type}-data`).innerText =
+              document.getElementById(`info-data`).innerText =
                 JSON.stringify(data.data, null, 2);
             } else {
               document.getElementById(
-                `${type}-data`
+                `info-data`
               ).innerText = `error: ${data.message}`;
             }
           })
