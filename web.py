@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, Response, jsonify
 import subprocess
-import threading
+from threading import Thread
 import cv2
 from jtop import jtop
 from time import sleep
