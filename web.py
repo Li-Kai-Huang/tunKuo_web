@@ -28,12 +28,12 @@ def get_info():
 
 def info_update():
     with jtop() as jetson:
-    # jetson.ok() will provide the proper update frequency
-    while True:
-        if jetson.ok():
-            # 讀取統計資訊
-            info = jetson.stats
-        sleep(0.5)
+        # jetson.ok() will provide the proper update frequency
+        while True:
+            if jetson.ok():
+                # 讀取統計資訊
+                info = jetson.stats
+            sleep(0.5)
 
 
 def generate_frames():
