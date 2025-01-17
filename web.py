@@ -110,13 +110,30 @@ def cameras():
 @app.route('/files', methods=['GET', 'POST'])
 def files():
     if request.method == 'POST':
-        return
+        if 'file' not in request.files:
+            return jsonify({"status": "error", "message": "No file part"}), 400
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"status": "error", "message": "No selected file"}), 400
+        filename = file.filename
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return jsonify({"status": "success", "message": "File uploaded successfully"}), 200
+
     if request.method == 'GET':
         path = request.args.get('path', '')
-        files_list = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'], path))
+        download = request.args.get('download', '')
+        full_path = os.path.join(app.config['UPLOAD_FOLDER'], path)
+
+        if download:
+            return send_from_directory(app.config['UPLOAD_FOLDER'], path, as_attachment=True)
+
+        if not os.path.exists(full_path):
+            return jsonify({"status": "error", "message": "Path does not exist"}), 400
+
+        files_list = os.listdir(full_path)
         files_info = []
         for file in files_list:
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], path, file)
+            file_path = os.path.join(full_path, file)
             files_info.append({
                 "name": file,
                 "isDirectory": os.path.isdir(file_path)

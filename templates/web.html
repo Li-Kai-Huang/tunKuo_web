@@ -349,7 +349,7 @@
           });
       }
       function fetchWebDirectoryFiles(path = "") {
-        fetch(`/?path=${path}`)
+        fetch(`/files?path=${path}`)
           .then((response) => response.json())
           .then((items) => {
             const fileList = document.getElementById("fileList");
@@ -368,7 +368,7 @@
                 listItem.appendChild(link);
               } else {
                 const link = document.createElement("a");
-                link.href = `/download?filename=${path}/${item.name}`;
+                link.href = `/files?path=${path}/${item.name}&download=true`;
                 link.textContent = item.name;
                 listItem.appendChild(link);
               }
@@ -391,6 +391,9 @@
             alert("無法獲取 web 目錄檔案");
           });
       }
+      document.addEventListener("DOMContentLoaded", function() {
+    fetchWebDirectoryFiles(); // 頁面加載時獲取文件列表
+  });
       function openTab(evt, tabName) {
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
@@ -448,7 +451,7 @@
           temp: "°C",
           power: "mW",
           cpu: "%",
-          gpu:"%"
+          gpu: "%",
           // 添加更多需要的單位
         };
 
