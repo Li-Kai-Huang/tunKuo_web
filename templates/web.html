@@ -172,31 +172,31 @@
     </div>
 
     <script>
-            /*const mockData = {
+      /*const mockData = {
                     option1: { title: '??賊?? 1', description: '?????舫?賊?? 1 ???鞈????' },
                     option2: { title: '??賊?? 2', description: '?????舫?賊?? 2 ???鞈????' },
                     option3: { title: '??賊?? 3', description: '?????舫?賊?? 3 ???鞈????' },
                     option4: { title: '??賊?? 4', description: '?????舫?賊?? 4 ???鞈????' },
                 };*/
 
-            // 設置事件監聽器
-            document.getElementById("Panel").addEventListener("click", function () {
-              loadContent("Panel");
-            });
+      // 設置事件監聽器
+      document.getElementById("Panel").addEventListener("click", function () {
+        loadContent("Panel");
+      });
 
-            document.getElementById("Cameras").addEventListener("click", function () {
-              loadContent("Cameras");
-            });
+      document.getElementById("Cameras").addEventListener("click", function () {
+        loadContent("Cameras");
+      });
 
-            document.getElementById("Files").addEventListener("click", function () {
-              loadContent("Files");
-            });
+      document.getElementById("Files").addEventListener("click", function () {
+        loadContent("Files");
+      });
 
-            // 根據選項載入內容
-            function loadContent(option) {
-              document.getElementById("welcome-message").style.display = "none";
-              if (option === "Panel") {
-                document.getElementById("content").innerHTML = `
+      // 根據選項載入內容
+      function loadContent(option) {
+        document.getElementById("welcome-message").style.display = "none";
+        if (option === "Panel") {
+          document.getElementById("content").innerHTML = `
                           <div class="tab">
                               <button class="tablinks" onclick="openTab(event, 'info')">INFO</button>
                               <button class="tablinks" onclick="openTab(event, 'control')">CONTROL</button>
@@ -210,11 +210,10 @@
                               <pre id= gpu_data>載入中...</pre>
                           </div>
                       `;
-                openTab(null, "info");
-                fetchPanelData();
-
-              } else if (option === "Cameras") {
-                document.getElementById("content").innerHTML = `
+          openTab(null, "info");
+          fetchPanelData();
+        } else if (option === "Cameras") {
+          document.getElementById("content").innerHTML = `
                                       <div class="tab">
                               <button class="tablinks" onclick="openTab(event, 'Camera1')">Camera 1</button>
                               <button class="tablinks" onclick="openTab(event, 'Camera2')">Camera 2</button>
@@ -233,9 +232,9 @@
                               <img src="/video_feed/camera3" alt="Camera 3">
                           </div>
                       `;
-                openTab(null, "Camera1"); // 預設打開 Camera1
-              } else if (option === "Files") {
-                document.getElementById("content").innerHTML = `
+          openTab(null, "Camera1"); // 預設打開 Camera1
+        } else if (option === "Files") {
+          document.getElementById("content").innerHTML = `
                           <div class="tab">
                               <button class="tablinks" onclick="openTab(event, 'doc')">doc</button>
                               <button class="tablinks" onclick="openTab(event, 'edition')">edition</button>
@@ -261,162 +260,161 @@
                               <button type="button" onclick="saveFile()">存檔</button>
                           </div>
                       `;
-                openTab(null, "doc"); // 預設打開 doc
-                fetchFileContent();
-                fetchWebDirectoryFiles(); // 新增這行
-              } else {
-                document.getElementById("content").innerHTML = `<p>資料未找到</p>`;
-              }
-            }
-
-            function uploadFile() {
-              const formData = new FormData(document.getElementById("uploadForm"));
-              fetch("/upload", {
-                method: "POST",
-                body: formData,
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  alert("檔案上傳成功");
-                })
-                .catch((error) => {
-                  alert("檔案上傳失敗");
-                });
-            }
-            function downloadFile(filename) {
-              window.location.href = `/download?filename=${filename}`;
-            }
-            function fetchFileContent() {
-              const filename = document.getElementById("fileSelect").value;
-              fetch(`/files?filename=${filename}`)
-                .then((response) => response.text())
-                .then((data) => {
-                  document.getElementById("fileContent").value = data;
-                })
-                .catch((error) => {
-                  alert("檔案內容獲取失敗");
-                });
-            }
-
-            function saveFile() {
-              const filename = document.getElementById("fileSelect").value;
-              const content = document.getElementById("fileContent").value;
-              fetch("/save", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ filename: filename, content: content }),
-              })
-                .then((response) => response.json())
-                .then((data) => {
-                  alert("檔案儲存成功");
-                })
-                .catch((error) => {
-                  alert("檔案儲存失敗");
-                });
-            }
-            function fetchWebDirectoryFiles(path = "") {
-              fetch(`/files?path=${path}`)
-                .then((response) => response.json())
-                .then((items) => {
-                  const fileList = document.getElementById("fileList");
-                  fileList.innerHTML = "";
-                  items.forEach((item) => {
-                    const listItem = document.createElement("li");
-                    if (item.isDirectory) {
-                      const link = document.createElement("a");
-                      link.href = "#";
-                      link.textContent = item.name;
-                      link.style.color = "red"; // 根目錄下的目錄換色
-                      link.onclick = () => {
-                        fetchWebDirectoryFiles(`${path}/${item.name}`);
-                        return false; // 防止默認行為
-                      };
-                      listItem.appendChild(link);
-                    } else {
-                      const link = document.createElement("a");
-                      link.href = `/download?filename=${path}/${item.name}`;
-                      link.textContent = item.name;
-                      listItem.appendChild(link);
-                    }
-                    fileList.appendChild(listItem);
-                  });
-                  if (path) {
-                    const listItem = document.createElement("li");
-                    const link = document.createElement("a");
-                    link.href = "#";
-                    link.textContent = "返回上層";
-                    link.onclick = () => {
-                      fetchWebDirectoryFiles(path.split("/").slice(0, -1).join("/"));
-                      return false; // 防止默認行為
-                    };
-                    fileList.insertBefore(listItem, fileList.firstChild);
-                    listItem.appendChild(link);
-                  }
-                })
-                .catch((error) => {
-                  alert("無法獲取 web 目錄檔案");
-                });
-            }
-            function openTab(evt, tabName) {
-              var i, tabcontent, tablinks;
-              tabcontent = document.getElementsByClassName("tabcontent");
-              for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-              }
-              tablinks = document.getElementsByClassName("tablinks");
-              for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-              }
-              if (evt) {
-                evt.currentTarget.className += " active";
-              }
-              document.getElementById(tabName).style.display = "block";
-            }
-            function fetchPanelData() {
-              fetch(`/panel`)
-                .then((response) => response.json())
-                .then((data) => {
-                  if (data.status === "success") {
-                    const infoData = document.getElementById("info-data");
-                    infoData.innerHTML = generateTable(data.data);
-                  } else {
-                    document.getElementById(
-                      `info-data`
-                    ).innerText = `error: ${data.message}`;
-                  }
-                })
-                .catch((error) => {
-                  document.getElementById(
-                    `info-data`
-                  ).innerText = `error: ${error}`;
-                });
-            }
-            function generateTable(data) {
-              const units = {
-                temp: "°C",
-                Power: "W",
-                CPU: "%"
-                // 添加更多需要的單位
-              };
-              let table = "<table><tr>";
-              for (let key in data) {
-                table += `<th>${key}</th>`;
-              }
-              table += "</tr><tr>";
-                  for (let key in data) {
-        let unit = "";
-        // 使用部分匹配來添加單位
-        for (let unitKey in units) {
-          if (key.toLowerCase().includes(unitKey)) {
-            unit = ` ${units[unitKey]}`;
-            break;
-          }
+          openTab(null, "doc"); // 預設打開 doc
+          fetchFileContent();
+          fetchWebDirectoryFiles(); // 新增這行
+        } else {
+          document.getElementById("content").innerHTML = `<p>資料未找到</p>`;
         }
-        table += `<td>${data[key]}${unit}</td>`;
       }
-      table += "</tr></table>";
+
+      function uploadFile() {
+        const formData = new FormData(document.getElementById("uploadForm"));
+        fetch("/upload", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert("檔案上傳成功");
+          })
+          .catch((error) => {
+            alert("檔案上傳失敗");
+          });
+      }
+      function downloadFile(filename) {
+        window.location.href = `/download?filename=${filename}`;
+      }
+      function fetchFileContent() {
+        const filename = document.getElementById("fileSelect").value;
+        fetch(`/files?filename=${filename}`)
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("fileContent").value = data;
+          })
+          .catch((error) => {
+            alert("檔案內容獲取失敗");
+          });
+      }
+
+      function saveFile() {
+        const filename = document.getElementById("fileSelect").value;
+        const content = document.getElementById("fileContent").value;
+        fetch("/save", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ filename: filename, content: content }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert("檔案儲存成功");
+          })
+          .catch((error) => {
+            alert("檔案儲存失敗");
+          });
+      }
+      function fetchWebDirectoryFiles(path = "") {
+        fetch(`/files?path=${path}`)
+          .then((response) => response.json())
+          .then((items) => {
+            const fileList = document.getElementById("fileList");
+            fileList.innerHTML = "";
+            items.forEach((item) => {
+              const listItem = document.createElement("li");
+              if (item.isDirectory) {
+                const link = document.createElement("a");
+                link.href = "#";
+                link.textContent = item.name;
+                link.style.color = "red"; // 根目錄下的目錄換色
+                link.onclick = () => {
+                  fetchWebDirectoryFiles(`${path}/${item.name}`);
+                  return false; // 防止默認行為
+                };
+                listItem.appendChild(link);
+              } else {
+                const link = document.createElement("a");
+                link.href = `/download?filename=${path}/${item.name}`;
+                link.textContent = item.name;
+                listItem.appendChild(link);
+              }
+              fileList.appendChild(listItem);
+            });
+            if (path) {
+              const listItem = document.createElement("li");
+              const link = document.createElement("a");
+              link.href = "#";
+              link.textContent = "返回上層";
+              link.onclick = () => {
+                fetchWebDirectoryFiles(path.split("/").slice(0, -1).join("/"));
+                return false; // 防止默認行為
+              };
+              fileList.insertBefore(listItem, fileList.firstChild);
+              listItem.appendChild(link);
+            }
+          })
+          .catch((error) => {
+            alert("無法獲取 web 目錄檔案");
+          });
+      }
+      function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        if (evt) {
+          evt.currentTarget.className += " active";
+        }
+        document.getElementById(tabName).style.display = "block";
+      }
+      function fetchPanelData() {
+        fetch(`/panel`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              const infoData = document.getElementById("info-data");
+              infoData.innerHTML = generateTable(data.data);
+            } else {
+              document.getElementById(
+                `info-data`
+              ).innerText = `error: ${data.message}`;
+            }
+          })
+          .catch((error) => {
+            document.getElementById(`info-data`).innerText = `error: ${error}`;
+          });
+      }
+      function generateTable(data) {
+        const units = {
+          temp: "°C",
+          Power: "W",
+          CPU: "%",
+          // 添加更多需要的單位
+        };
+        let table = "<table><tr>";
+        for (let key in data) {
+          table += `<th>${key}</th>`;
+        }
+        table += "</tr><tr>";
+        for (let key in data) {
+          let unit = "";
+          // 使用部分匹配來添加單位
+          for (let unitKey in units) {
+            if (key.toLowerCase().includes(unitKey)) {
+              unit = ` ${units[unitKey]}`;
+              break;
+            }
+          }
+          table += `<td>${data[key]}${unit}</td>`;
+        }
+        table += "</tr></table>";
+        return table; // 確保返回生成的表格 HTML
       }
     </script>
   </body>
