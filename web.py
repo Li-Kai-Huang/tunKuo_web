@@ -5,6 +5,7 @@ import cv2
 from jtop import jtop
 from time import sleep
 import json
+import os
 
 info = None
 
@@ -110,6 +111,17 @@ def cameras():
 def files():
     if request.method == 'POST':
         return
+    if request.method == 'GET':
+        path = request.args.get('path', '')
+        files_list = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'], path))
+        files_info = []
+        for file in files_list:
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], path, file)
+            files_info.append({
+                "name": file,
+                "isDirectory": os.path.isdir(file_path)
+            })
+        return jsonify(files_info)
 
 @app.route('/img', methods=['GET'])
 def img():
