@@ -5,135 +5,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>7632web</title>
     <style>
- body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            background-color: #f0f0f0;
-        }
-        .sidebar {
-            width: 200px;
-            background-color: #333;
-            color: white;
-            height: 100vh;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .sidebar ul li {
-            margin: 20px 0;
-        }
-        .sidebar ul li button {
-            width: 100%;
-            padding: 10px;
-            background-color: #444;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: left;
-            transition: background-color 0.3s;
-        }
-        .sidebar ul li button:hover {
-            background-color: #555;
-        }
-        .main-content {
-            flex-grow: 1;
-            padding: 0;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .main-content h1 {
-            margin-top: 0;
-            color: #333;
-            padding: 20px;
-            background-color: #f4f4f4;
-            border-bottom: 1px solid #ccc;
-        }
-        .data-box {
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .tab {
-            overflow: hidden;
-            border-bottom: 1px solid #ccc;
-            background-color: #007bff;
-            margin-bottom: 0;
-        }
-        .tab button {
-            background-color: inherit;
-            float: left;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 14px 20px;
-            transition: 0.3s;
-            font-size: 16px;
-            color: white;
-        }
-        .tab button:hover {
-            background-color: #0056b3;
-        }
-        .tab button.active {
-            background-color: #0056b3;
-        }
-        .tabcontent {
-            display: none;
-            padding: 20px;
-            border-top: none;
-            background-color: #fff;
-        }
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            padding: 4px 20px;
-            border: none;
-            border-radius: 4px;
-            background-color: #28a745;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .file-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .file-list li {
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f4f4f4;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            transition: background-color 0.3s;
-        }
-        .file-list li a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-        }
-        .file-list li a:hover {
-            text-decoration: underline;
-        }
-        .file-list li:hover {
-            background-color: #e9e9e9;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        background-color: #f0f0f0;
+      }
+      .sidebar {
+        width: 200px;
+        background-color: #333;
+        color: white;
+        height: 100vh;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      }
+      .sidebar ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      .sidebar ul li {
+        margin: 20px 0;
+      }
+      .sidebar ul li button {
+        width: 100%;
+        padding: 10px;
+        background-color: #444;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-align: left;
+        transition: background-color 0.3s;
+      }
+      .sidebar ul li button:hover {
+        background-color: #555;
+      }
+      .main-content {
+        flex-grow: 1;
+        padding: 0;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .main-content h1 {
+        margin-top: 0;
+        color: #333;
+        padding: 20px;
+        background-color: #f4f4f4;
+        border-bottom: 1px solid #ccc;
+      }
+      .data-box {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .tab {
+        overflow: hidden;
+        border-bottom: 1px solid #ccc;
+        background-color: #007bff;
+        margin-bottom: 0;
+      }
+      .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 20px;
+        transition: 0.3s;
+        font-size: 16px;
+        color: white;
+      }
+      .tab button:hover {
+        background-color: #0056b3;
+      }
+      .tab button.active {
+        background-color: #0056b3;
+      }
+      .tabcontent {
+        display: none;
+        padding: 20px;
+        border-top: none;
+        background-color: #fff;
+      }
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      button {
+        padding: 4px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #28a745;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #218838;
+      }
+      .file-list {
+        list-style-type: none;
+        padding: 0;
+      }
+      .file-list li {
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #f4f4f4;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+      .file-list li a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+      }
+      .file-list li a:hover {
+        text-decoration: underline;
+      }
+      .file-list li:hover {
+        background-color: #e9e9e9;
+      }
     </style>
   </head>
 
@@ -147,7 +147,7 @@
     </div>
 
     <div class="main-content">
-        <h1 id="welcome-message">Welcome Using this tools</h1>
+      <h1 id="welcome-message">Welcome Using this tools</h1>
       <div id="content" class="data-box">
         <!-- 這裡會顯示來自後端的資料 -->
       </div>
@@ -176,9 +176,9 @@
 
       // 根據選項載入內容
       function loadContent(option) {
-        document.getElementById('welcome-message').style.display = 'none';
+        document.getElementById("welcome-message").style.display = "none";
         if (option === "Panel") {
-            document.getElementById('content').innerHTML = `
+          document.getElementById("content").innerHTML = `
                     <div class="tab">
                         <button class="tablinks" onclick="openTab(event, 'CPU')">CPU</button>
                         <button class="tablinks" onclick="openTab(event, 'GPU')">GPU</button>
@@ -192,6 +192,9 @@
                         <p>載入中...</p>
                     </div>
                 `;
+          openTab(null, "CPU");
+          fetchPanelData("cpu");
+          fetchPanelData("gpu");
         } else if (option === "Cameras") {
           document.getElementById("content").innerHTML = `
                                 <div class="tab">
@@ -212,7 +215,7 @@
                         <img src="/video_feed/camera3" alt="Camera 3">
                     </div>
                 `;
-                openTab(null, 'Camera1'); // 預設打開 Camera1
+          openTab(null, "Camera1"); // 預設打開 Camera1
         } else if (option === "Files") {
           document.getElementById("content").innerHTML = `
                     <div class="tab">
@@ -240,96 +243,96 @@
                         <button type="button" onclick="saveFile()">存檔</button>
                     </div>
                 `;
-                openTab(null, 'doc'); // 預設打開 doc
+          openTab(null, "doc"); // 預設打開 doc
           fetchFileContent();
           fetchWebDirectoryFiles(); // 新增這行
         } else {
-                document.getElementById('content').innerHTML = `<p>資料未找到</p>`;
-            }
+          document.getElementById("content").innerHTML = `<p>資料未找到</p>`;
+        }
       }
       function fetchData(type) {
-            fetch(`/panel/${type}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById(type).innerHTML = `
+        fetch(`/panel/${type}`)
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById(type).innerHTML = `
                         <h3>${type} 資訊</h3>
                         <p>${data.description}</p>
                     `;
-                })
-                .catch(error => {
-                    document.getElementById(type).innerHTML = `<p>資料獲取失敗</p>`;
-                });
-        }
+          })
+          .catch((error) => {
+            document.getElementById(type).innerHTML = `<p>資料獲取失敗</p>`;
+          });
+      }
 
       function uploadFile() {
-            const formData = new FormData(document.getElementById('uploadForm'));
-            fetch('/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('檔案上傳成功');
-            })
-            .catch(error => {
-                alert('檔案上傳失敗');
-            });
-        }
+        const formData = new FormData(document.getElementById("uploadForm"));
+        fetch("/upload", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert("檔案上傳成功");
+          })
+          .catch((error) => {
+            alert("檔案上傳失敗");
+          });
+      }
 
       function downloadFile(filename) {
         window.location.href = `/download?filename=${filename}`;
       }
 
       function fetchFileContent() {
-            const filename = document.getElementById('fileSelect').value;
-            fetch(`/files?filename=${filename}`)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('fileContent').value = data;
-                })
-                .catch(error => {
-                    alert('檔案內容獲取失敗');
-                });
-        }
+        const filename = document.getElementById("fileSelect").value;
+        fetch(`/files?filename=${filename}`)
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("fileContent").value = data;
+          })
+          .catch((error) => {
+            alert("檔案內容獲取失敗");
+          });
+      }
 
       function saveFile() {
         const filename = document.getElementById("fileSelect").value;
         const content = document.getElementById("fileContent").value;
-        fetch('/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ filename: filename, content: content })
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('檔案儲存成功');
-            })
-            .catch(error => {
-                alert('檔案儲存失敗');
-            });
+        fetch("/save", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ filename: filename, content: content }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            alert("檔案儲存成功");
+          })
+          .catch((error) => {
+            alert("檔案儲存失敗");
+          });
       }
-      function fetchWebDirectoryFiles(path = '') {
+      function fetchWebDirectoryFiles(path = "") {
         fetch(`/files?path=${path}`)
-          .then(response => response.json())
-          .then(items => {
-            const fileList = document.getElementById('fileList');
-            fileList.innerHTML = '';
-            items.forEach(item => {
-              const listItem = document.createElement('li');
+          .then((response) => response.json())
+          .then((items) => {
+            const fileList = document.getElementById("fileList");
+            fileList.innerHTML = "";
+            items.forEach((item) => {
+              const listItem = document.createElement("li");
               if (item.isDirectory) {
-                const link = document.createElement('a');
-                link.href = '#';
+                const link = document.createElement("a");
+                link.href = "#";
                 link.textContent = item.name;
-                link.style.color = 'red'; // 根目錄下的目錄換色
+                link.style.color = "red"; // 根目錄下的目錄換色
                 link.onclick = () => {
                   fetchWebDirectoryFiles(`${path}/${item.name}`);
                   return false; // 防止默認行為
                 };
                 listItem.appendChild(link);
               } else {
-                const link = document.createElement('a');
+                const link = document.createElement("a");
                 link.href = `/download?filename=${path}/${item.name}`;
                 link.textContent = item.name;
                 listItem.appendChild(link);
@@ -337,37 +340,56 @@
               fileList.appendChild(listItem);
             });
             if (path) {
-              const listItem = document.createElement('li');
-              const link = document.createElement('a');
-              link.href = '#';
-              link.textContent = '返回上層';
+              const listItem = document.createElement("li");
+              const link = document.createElement("a");
+              link.href = "#";
+              link.textContent = "返回上層";
               link.onclick = () => {
-                fetchWebDirectoryFiles(path.split('/').slice(0, -1).join('/'));
+                fetchWebDirectoryFiles(path.split("/").slice(0, -1).join("/"));
                 return false; // 防止默認行為
               };
               fileList.insertBefore(listItem, fileList.firstChild);
               listItem.appendChild(link);
             }
           })
-          .catch(error => {
-            alert('無法獲取 web 目錄檔案');
+          .catch((error) => {
+            alert("無法獲取 web 目錄檔案");
           });
       }
       function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            if (evt) {
-                evt.currentTarget.className += " active";
-            }
-            document.getElementById(tabName).style.display = "block";
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
         }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        if (evt) {
+          evt.currentTarget.className += " active";
+        }
+        document.getElementById(tabName).style.display = "block";
+      }
+      function fetchPanelData(type) {
+        fetch(`/panel/${type}`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              document.getElementById(`${type}-data`).innerText =
+                JSON.stringify(data.data, null, 2);
+            } else {
+              document.getElementById(
+                `${type}-data`
+              ).innerText = `錯誤: ${data.message}`;
+            }
+          })
+          .catch((error) => {
+            document.getElementById(
+              `${type}-data`
+            ).innerText = `錯誤: ${error}`;
+          });
+      }
 
       setInterval(function () {
         loadContent(option);
