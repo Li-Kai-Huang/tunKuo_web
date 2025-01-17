@@ -185,16 +185,16 @@
                     </div>
                     <div id="CPU" class="tabcontent">
                         <h3>CPU 資訊</h3>
-                        <p>載入中...</p>
+                        <pre id= "cpu_data">載入中...</pre>
                     </div>
                     <div id="GPU" class="tabcontent">
                         <h3>GPU 資訊</h3>
-                        <p>載入中...</p>
+                        <pre id= gpu_data>載入中...</pre>
                     </div>
                 `;
-          openTab(null, "CPU");
-          fetchPanelData("cpu");
-          fetchPanelData("gpu");
+          openTab(null, "Panel");
+          fetchPanelData();
+          
         } else if (option === "Cameras") {
           document.getElementById("content").innerHTML = `
                                 <div class="tab">
@@ -371,8 +371,8 @@
         }
         document.getElementById(tabName).style.display = "block";
       }
-      function fetchPanelData(type) {
-        fetch(`/panel/${type}`)
+      function fetchPanelData() {
+        fetch(`/panel`)
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "success") {
@@ -381,19 +381,16 @@
             } else {
               document.getElementById(
                 `${type}-data`
-              ).innerText = `錯誤: ${data.message}`;
+              ).innerText = `error: ${data.message}`;
             }
           })
           .catch((error) => {
             document.getElementById(
               `${type}-data`
-            ).innerText = `錯誤: ${error}`;
+            ).innerText = `error: ${error}`;
           });
       }
 
-      setInterval(function () {
-        loadContent(option);
-      }, 5);
     </script>
   </body>
 </html>
