@@ -56,7 +56,7 @@ def panel():
         try:
             with jtop() as jetson:#json.loads(jetson.stats, indent=4, sort_keys=True, default=str)
                 return app.response_class(
-                        response='{"status": "success", "data": {"a", "a"}}',
+                        response=json.dumps(jetson.stats, indent=4, sort_keys=True, default=str),
                         status=200,
                         mimetype='application/json'
                     )
