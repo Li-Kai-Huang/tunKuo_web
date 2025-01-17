@@ -191,7 +191,7 @@
       document.getElementById("Files").addEventListener("click", function () {
         loadContent("Files");
       });
-
+      let updateInterval;
       // 根據選項載入內容
       function loadContent(option) {
         document.getElementById("welcome-message").style.display = "none";
@@ -212,6 +212,10 @@
                       `;
           openTab(null, "info");
           fetchPanelData();
+          if (updateInterval) {
+            clearInterval(updateInterval);
+          }
+          updateInterval = setInterval(fetchPanelData, 500); // 每5秒更新一次
         } else if (option === "Cameras") {
           document.getElementById("content").innerHTML = `
                                       <div class="tab">
@@ -391,28 +395,28 @@
           });
       }
       function generateTable(data) {
-    const units = {
-      temp: "°C",
-      power: "W",
-      cpu: "%",
-      // 添加更多需要的單位
-    };
+        const units = {
+          temp: "°C",
+          power: "mW",
+          cpu: "%",
+          // 添加更多需要的單位
+        };
 
-    let table = "<table>";
-    for (let key in data) {
-      let unit = "";
-      // 使用部分匹配來添加單位
-      for (let unitKey in units) {
-        if (key.toLowerCase().includes(unitKey)) {
-          unit = ` ${units[unitKey]}`;
-          break;
+        let table = "<table>";
+        for (let key in data) {
+          let unit = "";
+          // 使用部分匹配來添加單位
+          for (let unitKey in units) {
+            if (key.toLowerCase().includes(unitKey)) {
+              unit = ` ${units[unitKey]}`;
+              break;
+            }
+          }
+          table += `<tr><th>${key}</th><td>${data[key]}${unit}</td></tr>`;
         }
+        table += "</table>";
+        return table;
       }
-      table += `<tr><th>${key}</th><td>${data[key]}${unit}</td></tr>`;
-    }
-    table += "</table>";
-    return table;
-  }
     </script>
   </body>
 </html>
