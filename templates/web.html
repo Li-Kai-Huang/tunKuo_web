@@ -434,9 +434,9 @@
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "success") {
-              alert(`success: ${data.message}`);
-            } else {
               alert(`error: ${data.message}`);
+            } else {
+              alert(`success: ${data.message}`);
             }
           })
           .catch((error) => {

@@ -90,7 +90,7 @@ def panel():
                 subprocess.run(['sudo', 'shutdown', '-h', 'now'])
                 return jsonify({"status": "success", "message": "Shutting down the system"}), 200
             elif command == 'reboot':
-                subprocess.run(['sudo', 'shutdown', '-r','+3'])
+                subprocess.run(['sudo', 'reboot'])
                 return jsonify({"status": "success", "message": "Rebooting the system"}), 200
             elif command == 'restart_service':
                 subprocess.run(['sudo', 'systemctl', 'restart', 'oled_server.service'])
