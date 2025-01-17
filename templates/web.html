@@ -12,6 +12,7 @@
         display: flex;
         background-color: #f0f0f0;
       }
+
       .sidebar {
         width: 200px;
         background-color: #333;
@@ -20,13 +21,16 @@
         padding: 20px;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
       }
+
       .sidebar ul {
         list-style-type: none;
         padding: 0;
       }
+
       .sidebar ul li {
         margin: 20px 0;
       }
+
       .sidebar ul li button {
         width: 100%;
         padding: 10px;
@@ -38,9 +42,11 @@
         text-align: left;
         transition: background-color 0.3s;
       }
+
       .sidebar ul li button:hover {
         background-color: #555;
       }
+
       .main-content {
         flex-grow: 1;
         padding: 0;
@@ -50,6 +56,7 @@
         border-radius: 8px;
         overflow: hidden;
       }
+
       .main-content h1 {
         margin-top: 0;
         color: #333;
@@ -57,18 +64,21 @@
         background-color: #f4f4f4;
         border-bottom: 1px solid #ccc;
       }
+
       .data-box {
         background-color: #f9f9f9;
         padding: 20px;
         border-radius: 0 0 8px 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
+
       .tab {
         overflow: hidden;
         border-bottom: 1px solid #ccc;
         background-color: #007bff;
         margin-bottom: 0;
       }
+
       .tab button {
         background-color: inherit;
         float: left;
@@ -80,18 +90,22 @@
         font-size: 16px;
         color: white;
       }
+
       .tab button:hover {
         background-color: #0056b3;
       }
+
       .tab button.active {
         background-color: #0056b3;
       }
+
       .tabcontent {
         display: none;
         padding: 20px;
         border-top: none;
         background-color: #fff;
       }
+
       textarea {
         width: 100%;
         padding: 10px;
@@ -99,6 +113,7 @@
         border: 1px solid #ccc;
         box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
       }
+
       button {
         padding: 4px 20px;
         border: none;
@@ -108,13 +123,16 @@
         cursor: pointer;
         transition: background-color 0.3s;
       }
+
       button:hover {
         background-color: #218838;
       }
+
       .file-list {
         list-style-type: none;
         padding: 0;
       }
+
       .file-list li {
         margin: 10px 0;
         padding: 10px;
@@ -123,32 +141,39 @@
         border-radius: 4px;
         transition: background-color 0.3s;
       }
+
       .file-list li a {
         text-decoration: none;
         color: #007bff;
         font-weight: bold;
       }
+
       .file-list li a:hover {
         text-decoration: underline;
       }
+
       .file-list li:hover {
         background-color: #e9e9e9;
       }
+
       table {
         width: 100%;
         border-collapse: collapse;
         margin: 20px 0;
       }
+
       table,
       th,
       td {
         border: 1px solid #ccc;
       }
+
       th,
       td {
         padding: 10px;
         text-align: left;
       }
+
       th {
         background-color: #f4f4f4;
       }
@@ -173,11 +198,11 @@
 
     <script>
       /*const mockData = {
-                    option1: { title: '??賊?? 1', description: '?????舫?賊?? 1 ???鞈????' },
-                    option2: { title: '??賊?? 2', description: '?????舫?賊?? 2 ???鞈????' },
-                    option3: { title: '??賊?? 3', description: '?????舫?賊?? 3 ???鞈????' },
-                    option4: { title: '??賊?? 4', description: '?????舫?賊?? 4 ???鞈????' },
-                };*/
+                      option1: { title: '??賊?? 1', description: '?????舫?賊?? 1 ???鞈????' },
+                      option2: { title: '??賊?? 2', description: '?????舫?賊?? 2 ???鞈????' },
+                      option3: { title: '??賊?? 3', description: '?????舫?賊?? 3 ???鞈????' },
+                      option4: { title: '??賊?? 4', description: '?????舫?賊?? 4 ???鞈????' },
+                  };*/
 
       // 設置事件監聽器
       document.getElementById("Panel").addEventListener("click", function () {
@@ -205,6 +230,14 @@
                               <h3>Jetson Orin Nano 資訊</h3>
                               <div id="info-data">載入中...</div>
                           </div>
+                          <div id = "control">
+                              <h3>控制面板</h3>
+                                <button onclick="sendCommand('shutdown')">關機</button>
+                                <button onclick="sendCommand('reboot')">重啟</button>
+                                <button onclick="sendCommand('restart_service')">重啟服務</button>
+                                <button onclick="sendCommand('start_service')">啟動服務</button>
+                                <button onclick="sendCommand('stop_service')">停止服務</button>
+                            </div>
                       `;
           openTab(null, "info");
           fetchPanelData();
@@ -388,6 +421,26 @@
           })
           .catch((error) => {
             document.getElementById(`info-data`).innerText = `error: ${error}`;
+          });
+      }
+      function sendCommand(command) {
+        fetch("/panel", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ command: command }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              alert(`success: ${data.message}`);
+            } else {
+              alert(`error: ${data.message}`);
+            }
+          })
+          .catch((error) => {
+            alert(`error: ${error}`);
           });
       }
       function generateTable(data) {
