@@ -349,7 +349,7 @@
           });
       }
       function fetchWebDirectoryFiles(path = "") {
-        fetch(`/files?path=${path}`)
+        fetch(`/?path=${path}`)
           .then((response) => response.json())
           .then((items) => {
             const fileList = document.getElementById("fileList");
