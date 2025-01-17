@@ -320,7 +320,7 @@
       }
       function fetchFileContent() {
         const filename = document.getElementById("fileSelect").value;
-        fetch(`/files?filename=${filename}`)
+        fetch(`/?filename=${filename}`)
           .then((response) => response.text())
           .then((data) => {
             document.getElementById("fileContent").value = data;
@@ -448,6 +448,7 @@
           temp: "°C",
           power: "mW",
           cpu: "%",
+          gpu:"%"
           // 添加更多需要的單位
         };
 
