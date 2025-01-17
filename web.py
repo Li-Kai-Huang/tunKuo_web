@@ -15,6 +15,8 @@ app = Flask(__name__)
 MAIN_PY_PATH = '/home/jetson/main.py'
 MAIN_SH_PATH = '/home/jetson/main.sh'
 WEB_HTML_PATH = 'web.html'
+UPLOAD_FOLDER = '/home/jetson/'  # 替換為你想要保存文件的目錄
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Initialize the camera
 cap = cv2.VideoCapture(0)
