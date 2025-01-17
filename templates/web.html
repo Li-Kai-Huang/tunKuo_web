@@ -303,13 +303,18 @@
 
       function uploadFile() {
         const formData = new FormData(document.getElementById("uploadForm"));
-        fetch("/upload", {
+        fetch("/files", {
           method: "POST",
           body: formData,
         })
           .then((response) => response.json())
           .then((data) => {
-            alert("檔案上傳成功");
+            if (data.status === "success") {
+              alert("檔案上傳成功");
+              fetchWebDirectoryFiles(); // 上傳成功後刷新文件列表
+            } else {
+              alert(`錯誤: ${data.message}`);
+            }
           })
           .catch((error) => {
             alert("檔案上傳失敗");
@@ -391,9 +396,10 @@
             alert("無法獲取 web 目錄檔案");
           });
       }
+
       document.addEventListener("DOMContentLoaded", function() {
-    fetchWebDirectoryFiles(); // 頁面加載時獲取文件列表
-  });
+        fetchWebDirectoryFiles(); // 頁面加載時獲取文件列表
+      });
       function openTab(evt, tabName) {
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
