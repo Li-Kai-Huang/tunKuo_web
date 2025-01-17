@@ -391,31 +391,28 @@
           });
       }
       function generateTable(data) {
-        const units = {
-          temp: "°C",
-          Power: "W",
-          CPU: "%",
-          // 添加更多需要的單位
-        };
-        let table = "<table><tr>";
-        for (let key in data) {
-          table += `<th>${key}</th>`;
+    const units = {
+      temp: "°C",
+      power: "W",
+      cpu: "%",
+      // 添加更多需要的單位
+    };
+
+    let table = "<table>";
+    for (let key in data) {
+      let unit = "";
+      // 使用部分匹配來添加單位
+      for (let unitKey in units) {
+        if (key.toLowerCase().includes(unitKey)) {
+          unit = ` ${units[unitKey]}`;
+          break;
         }
-        table += "</tr><tr>";
-        for (let key in data) {
-          let unit = "";
-          // 使用部分匹配來添加單位
-          for (let unitKey in units) {
-            if (key.toLowerCase().includes(unitKey)) {
-              unit = ` ${units[unitKey]}`;
-              break;
-            }
-          }
-          table += `<td>${data[key]}${unit}</td>`;
-        }
-        table += "</tr></table>";
-        return table; // 確保返回生成的表格 HTML
       }
+      table += `<tr><th>${key}</th><td>${data[key]}${unit}</td></tr>`;
+    }
+    table += "</table>";
+    return table;
+  }
     </script>
   </body>
 </html>
