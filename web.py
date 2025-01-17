@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, Response, jsonify
 import subprocess
-import thread
+import threading
 import cv2
 from jtop import jtop
 from time import sleep
@@ -26,7 +26,7 @@ if not cap.isOpened():
 def get_info():
     return info
 
-def info_update():
+def info_update(threading.thread):
     with jtop() as jetson:
         # jetson.ok() will provide the proper update frequency
         while True:
@@ -117,6 +117,6 @@ def img():
 
 if __name__ == '__main__':
     # Start the Flask application
-    thread.start_new_thread(info_update)
+    info_update.start()
     app.run(host='0.0.0.0', port=5000, threaded=True)
 
