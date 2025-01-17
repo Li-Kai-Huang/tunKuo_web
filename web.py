@@ -56,7 +56,7 @@ def panel():
             with jtop() as jetson:
                 while jetson.ok():
                     # Fetch stats from Jetson device
-                    return jsonify({"status": "success", "data": str(jetson.stats)}), 200
+                    return jsonify({"status": "success", "data": jetson.stats}), 200
         except Exception as e:
             return jsonify({"status": "error", "message": str(e)})
     
