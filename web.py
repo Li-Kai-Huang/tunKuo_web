@@ -117,6 +117,7 @@ def img():
 
 if __name__ == '__main__':
     # Start the Flask application
-    Thread(target=info_update).run()
+    updataT = Thread(target=info_update)
+    updataT.run()
     app.run(host='0.0.0.0', port=5000, threaded=True)
 
