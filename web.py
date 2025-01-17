@@ -4,7 +4,8 @@ import threading
 import cv2
 from jtop import jtop
 from time import sleep
-from ast import literal_eval
+from json import loads
+
 app = Flask(__name__)
 
 # File paths
@@ -56,7 +57,7 @@ def panel():
             with jtop() as jetson:
                 while jetson.ok():
                     # Fetch stats from Jetson device
-                    return jsonify({"status": "success", "data": literal_eval(str(jetson.stats))}), 200
+                    return jsonify({"status": "success", "data": loads(jetson.stats)}), 200
         except Exception as e:
             return jsonify({"status": "error", "message": str(e)})
     
