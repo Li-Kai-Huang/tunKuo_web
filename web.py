@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, Response, jsonify
 import subprocess
-from threading import Thread
+from threading
 import cv2
 from jtop import jtop
 from time import sleep
@@ -117,7 +117,7 @@ def img():
 
 if __name__ == '__main__':
     # Start the Flask application
-    updataT = Thread(target=info_update)
+    updataT = threading.Thread(target=info_update)
     updataT.run()
     app.run(host='0.0.0.0', port=5000, threaded=True)
 
