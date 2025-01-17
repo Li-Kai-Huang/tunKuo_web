@@ -54,20 +54,11 @@ def index():
 def panel():
     if request.method == 'GET':
         try:
-            with jtop() as jetson:
-                # jetson.stats provides our system measurements as type dict.
-                tmp = jetson.stats  
-                # time and uptime are proved as time objects. These needed to be converted before passing as a JSON string,
-                tmp["time"] = str(tmp["time"].strftime('%m/%d/%Y'))
-                tmp["uptime"] = str(tmp["uptime"])
-                # We then convert our dict -> Json string
-                influx_json= {"jetson": tmp}
-                #print(json.dumps(influx_json))
-                    # Fetch stats from Jetson device
-                return jsonify({"status": "success", "data": json.dumps(influx_json)}), 200
+            with jtop.jtop() as jetson:
+                return jsonify({"status": "success", "data": json.dumps(jetson.stats, indent=4, sort_keys=True, default=str)}), 200
         except Exception as e:
             return jsonify({"status": "error", "message": str(e)})
-    
+
     if request.method == 'POST':
 
         try:
