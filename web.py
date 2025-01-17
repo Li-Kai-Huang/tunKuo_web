@@ -55,7 +55,7 @@ def panel():
     if request.method == 'GET':
         try:
             with jtop() as jetson:#json.loads(jetson.stats, indent=4, sort_keys=True, default=str)
-                return jsonify({"status": "success", "data": {'a', 'a'}}), 200
+                return {"status": "success", "data": {'a', 'a'}}, 200
         except Exception as e:
             return jsonify({"status": "error", "message": str(e)})
 
