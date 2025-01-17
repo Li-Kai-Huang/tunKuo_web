@@ -27,6 +27,7 @@ def get_info():
     return info
 
 def info_update():
+    global info
     with jtop() as jetson:
         # jetson.ok() will provide the proper update frequency
         while True:
