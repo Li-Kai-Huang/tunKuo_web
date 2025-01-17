@@ -26,7 +26,7 @@ if not cap.isOpened():
 def get_info():
     return info
 
-def info_update(threading.thread):
+def info_update():
     with jtop() as jetson:
         # jetson.ok() will provide the proper update frequency
         while True:
