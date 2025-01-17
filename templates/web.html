@@ -294,7 +294,7 @@
                           </div>
                       `;
           openTab(null, "doc"); // 預設打開 doc
-          fetchWebDirectoryFiles(); // 新增這行
+          fetchWebDirectoryFiles();
         } else {
           document.getElementById("content").innerHTML = `<p>資料未找到</p>`;
         }
@@ -322,17 +322,7 @@
       function downloadFile(filename) {
         window.location.href = `/download?filename=${filename}`;
       }
-      function fetchFileContent() {
-        const filename = document.getElementById("fileSelect").value;
-        fetch(`/?filename=${filename}`)
-          .then((response) => response.text())
-          .then((data) => {
-            document.getElementById("fileContent").value = data;
-          })
-          .catch((error) => {
-            alert("檔案內容獲取失敗");
-          });
-      }
+
 
       function saveFile() {
         const filename = document.getElementById("fileSelect").value;
@@ -372,8 +362,12 @@
                 listItem.appendChild(link);
               } else {
                 const link = document.createElement("a");
-                link.href = `/files?path=${path}/${item.name}&download=true`;
+                link.href = "#";
                 link.textContent = item.name;
+                link.onclick = () => {
+                  downloadFile(`${path}/${item.name}`);
+                  return false; // 防止默認行為
+                };
                 listItem.appendChild(link);
               }
               fileList.appendChild(listItem);
@@ -395,6 +389,7 @@
             alert("無法獲取 web 目錄檔案");
           });
       }
+
       document.addEventListener("DOMContentLoaded", function () {
         fetchWebDirectoryFiles(); // 頁面加載時獲取文件列表
       });
