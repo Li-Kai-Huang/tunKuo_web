@@ -6,6 +6,8 @@ from jtop import jtop
 from time import sleep
 import json
 
+info = None
+
 app = Flask(__name__)
 
 # File paths
@@ -20,6 +22,19 @@ cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     print("Error: Camera not found!")
     exit()
+
+def get_info():
+    return info
+
+def info_update():
+    with jtop() as jetson:
+    # jetson.ok() will provide the proper update frequency
+    while True:
+        if jetson.ok():
+            # 讀取統計資訊
+            info = jetson.stats
+        sleep(0.5)
+
 
 def generate_frames():
     while True:
@@ -54,12 +69,11 @@ def index():
 def panel():
     if request.method == 'GET':
         try:
-            with jtop() as jetson:#json.loads(jetson.stats, indent=4, sort_keys=True, default=str)
-                return app.response_class(
-                        response=json.dumps({"status": "success", "data": jetson.stats}, indent=4, sort_keys=True, default=str),
-                        status=200,
-                        mimetype='application/json'
-                    )
+            return app.response_class(
+                    response=json.dumps({"status": "success", "data": get_info()}, indent=4, sort_keys=True, default=str),
+                    status=200,
+                    mimetype='application/json'
+                )
         except Exception as e:
             return jsonify({"status": "error", "message": str(e)})
 
@@ -103,5 +117,6 @@ def img():
 
 if __name__ == '__main__':
     # Start the Flask application
+    thread.start_new_thread(, ("Thread-1", 2, ) )
     app.run(host='0.0.0.0', port=5000, threaded=True)
 
