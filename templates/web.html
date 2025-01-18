@@ -323,7 +323,6 @@
         window.location.href = `/files?path=${filename}&download=true`;
       }
 
-
       function saveFile() {
         const filename = document.getElementById("fileSelect").value;
         const content = document.getElementById("fileContent").value;
@@ -347,12 +346,12 @@
           .then((response) => response.json())
           .then((items) => {
             const fileList = document.getElementById("fileList");
-            fileList.innerHTML = "";
+            fileList.innerHTML = ""; // 清空現有列表
             items.forEach((item) => {
               const listItem = document.createElement("li");
               if (item.isDirectory) {
                 const link = document.createElement("a");
-                link.href = "#" ;
+                link.href = "#";
                 link.textContent = item.name;
                 link.style.color = "red"; // 根目錄下的目錄換色
                 link.onclick = () => {
@@ -372,6 +371,7 @@
               }
               fileList.appendChild(listItem);
             });
+            // 如果有子目錄，則顯示返回按鈕
             if (path) {
               const listItem = document.createElement("li");
               const link = document.createElement("a");
@@ -379,10 +379,10 @@
               link.textContent = "返回上層";
               link.onclick = () => {
                 fetchWebDirectoryFiles(path.split("/").slice(0, -1).join("/"));
-                return false; // 防止默認行為
+                return false;
               };
-              fileList.insertBefore(listItem, fileList.firstChild);
               listItem.appendChild(link);
+              fileList.insertBefore(listItem, fileList.firstChild);
             }
           })
           .catch((error) => {
