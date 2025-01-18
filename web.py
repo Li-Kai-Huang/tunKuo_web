@@ -16,7 +16,7 @@ MAIN_PY_PATH = '/home/jetson/main.py'
 MAIN_SH_PATH = '/home/jetson/main.sh'
 WEB_HTML_PATH = 'web.html'
 DOWNLOAD_FOLDER = '/'  # 替換為你想要保存文件的目錄
-UPLOAD_FOLDER = '/home/jetson'
+UPLOAD_FOLDER = '/home/jetson/'
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
