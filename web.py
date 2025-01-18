@@ -16,9 +16,10 @@ MAIN_PY_PATH = '/home/jetson/main.py'
 MAIN_SH_PATH = '/home/jetson/main.sh'
 WEB_HTML_PATH = 'web.html'
 DOWNLOAD_FOLDER = '/'  # 替換為你想要保存文件的目錄
-UPLOAD_FOLDER = '/home/jetson/'
+EDIT_UPLOAD_FOLDER = '/home/jetson/'
+EDIT_DOWNLOAD_FOLDER = '/home/jetson/'
 app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['EDIT_UPLOAD_FOLDER'] = EDIT_UPLOAD_FOLDER
 
 # Initialize the camera
 cap = cv2.VideoCapture(0)
@@ -118,7 +119,44 @@ def cameras():
     if request.method == 'POST':
         return
 
-@app.route('/files', methods=['GET', 'POST'])
+# 讀取檔案內容 (GET /files)
+@app.route('/files', methods=['GET'])
+def get_file():
+    filename = request.args.get('path')  # 取得路徑參數
+    if not filename:
+        return jsonify({"status": "error", "message": "No file selected"}), 400
+    
+    file_path = os.path.join(app.config['EDIT_UPLOAD_FOLDER'], filename)
+    
+    if not os.path.exists(file_path):
+        return jsonify({"status": "error", "message": "File not found"}), 404
+
+    with open(file_path, 'r') as file:
+        content = file.read()  # 讀取檔案內容
+    
+    return content  # 返回檔案內容
+
+# 儲存檔案內容 (POST /files)
+@app.route('/files', methods=['POST'])
+def save_file():
+    data = request.get_json()  # 取得 JSON 格式的資料
+    filename = data.get('filename')
+    content = data.get('content')
+    
+    if not filename or not content:
+        return jsonify({"status": "error", "message": "Missing filename or content"}), 400
+    
+    file_path = os.path.join(app.config['EDIT_UPLOAD_FOLDER'], filename)
+    
+    try:
+        with open(file_path, 'w') as file:
+            file.write(content)  # 儲存檔案內容
+        return jsonify({"status": "success", "message": f"{filename} saved successfully"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Error saving file: {str(e)}"}), 500
+
+# 原來的檔案上傳與下載處理 (POST & GET /files)
+@app.route('/files', methods=['POST'])
 def files():
     if request.method == 'POST':
         if 'file' not in request.files:
@@ -127,7 +165,7 @@ def files():
         if file.filename == '':
             return jsonify({"status": "error", "message": "No selected file"}), 400
         filename = file.filename
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file.save(os.path.join(app.config['EDIT_UPLOAD_FOLDER'], filename))
         return jsonify({"status": "success", "message": "File uploaded successfully"}), 200
 
     if request.method == 'GET':
