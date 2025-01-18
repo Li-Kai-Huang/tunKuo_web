@@ -104,8 +104,11 @@ def panel():
             elif command == 'reboot':
                 subprocess.run(['sudo', 'reboot'])
                 return jsonify({"status": "success", "message": "Rebooting the system"}), 200
-            elif command == 'restart_service':
-                subprocess.run(['sudo', 'systemctl', 'restart', 'oled_server.service'])
+            elif command == 'restart_web_service':
+                subprocess.run(['sudo', 'systemctl', 'restart', 'web.service'])
+                return jsonify({"status": "success", "message": "Service restarted"}), 200
+            elif command == 'restart_maind_service':
+                subprocess.run(['sudo', 'systemctl', 'restart', 'maind.service'])
                 return jsonify({"status": "success", "message": "Service restarted"}), 200
             else:
                 return jsonify({"status": "error", "message": "Unknown command"}), 400
