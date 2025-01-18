@@ -300,6 +300,7 @@
         }
       }
 
+      // 上傳文件
       function uploadFile() {
         const formData = new FormData(document.getElementById("uploadForm"));
         fetch("/files", {
@@ -319,6 +320,7 @@
             alert("檔案上傳失敗");
           });
       }
+
       function downloadFile(filename) {
         const sanitizedFilename = filename.startsWith("/")
           ? filename.slice(1)
@@ -326,6 +328,7 @@
         window.location.href = `/files?path=${sanitizedFilename}&download=true`;
       }
 
+      // 儲存文件
       function saveFile() {
         const filename = document.getElementById("fileSelect").value;
         const content = document.getElementById("fileContent").value;
