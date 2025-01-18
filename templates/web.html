@@ -329,7 +329,7 @@
       function saveFile() {
         const filename = document.getElementById("fileSelect").value;
         const content = document.getElementById("fileContent").value;
-        fetch("/save", {
+        fetch("/files", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
