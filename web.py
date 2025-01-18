@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, Response, jsonify, send_from_directory
+from flask import Flask, request, render_template, Response, jsonify, send_from_directory,redirect
 import subprocess
 import threading
 import cv2
@@ -20,6 +20,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Initialize the camera
 cap = cv2.VideoCapture(0)
+
+@app.before_request
+def enforce_http():
+    # 檢查是否是 HTTPS 請求
+    if request.is_secure:
+        # 如果是 HTTPS 請求，重定向到 HTTP
+        return redirect(request.url.replace("https://", "http://"), code=301)
 
 # Ensure the camera is opened
 if not cap.isOpened():
