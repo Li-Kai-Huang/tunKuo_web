@@ -134,12 +134,15 @@ def files():
         path = request.args.get('path', ' ').strip()
         download = request.args.get('download', '').strip()
         full_path = os.path.join(app.config['DOWNLOAD_FOLDER'], path)
-
-        if download:
+        
+        if download.lower() == 'true':
             return send_from_directory(app.config['DOWNLOAD_FOLDER'], path, as_attachment=True)
-
-        if not os.path.exists(full_path):
-            return jsonify({"status": "error", "message": "Path does not exist"}), 400
+            
+        if download.lower() == 'true':
+            return send_from_directory(app.config['DOWNLOAD_FOLDER'], path, as_attachment=True)
+        if download.lower() == 'false':
+            return send_from_directory(app.config['DOWNLOAD_FOLDER'], path, as_attachment=false)
+        
 
         files_list = os.listdir(full_path)
         files_info = []
