@@ -320,8 +320,7 @@
           });
       }
       function downloadFile(filename) {
-        filename = filename.lstrip("/");
-        window.location.href = `/files?path=${filename}&download=true`;
+        window.location.href = `/files?path=${filename.lstrip("/")}&download=true`;
       }
 
       function saveFile() {
