@@ -320,8 +320,7 @@
           });
       }
       function downloadFile(filename) {
-        const path = encodeURIComponent(filename); // 將 filename 編碼為有效的 URL 格式
-        window.location.href = `/files?path=${path}&download=true`;
+        window.location.href = `/files?path=${filename}&download=true`;
       }
 
 
