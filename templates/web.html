@@ -234,8 +234,8 @@
                               <h3>控制面板</h3>
                                 <button onclick="sendCommand('shutdown')">關機</button>
                                 <button onclick="sendCommand('reboot')">重啟</button>
-                                <button onclick="sendCommand('restart_web_service')">重啟服務</button>
-                                <button onclick="sendCommand('restart_maind_service')">啟動服務</button>
+                                <button onclick="sendCommand('restart_web_service')">重啟web服務</button>
+                                <button onclick="sendCommand('restart_maind_service')">重起maind服務</button>
                                 <button onclick="sendCommand('stop_service')">停止服務</button>
                             </div>
                       `;
@@ -327,7 +327,7 @@
       }
       function fetchFileContent() {
         const filename = document.getElementById("fileSelect").value;
-        fetch(`/files?path=${filename}`)
+        fetch(`/files?path=${filename}&download=false`)
           .then((response) => response.text())
           .then((data) => {
             document.getElementById("fileContent").value = data;
@@ -339,10 +339,13 @@
       function saveFile() {
         const filename = document.getElementById("fileSelect").value;
         const content = document.getElementById("fileContent").value;
+        const formData = new FormData();
+        formData.append("filename", filename);
+        formData.append("content", new Blob([content], { type: "text/plain" }));
         fetch("/files", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/fromdata",
           },
           body: JSON.stringify({ filename: filename, content: content }),
         })
