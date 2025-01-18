@@ -15,7 +15,7 @@ app = Flask(__name__)
 MAIN_PY_PATH = '/home/jetson/main.py'
 MAIN_SH_PATH = '/home/jetson/main.sh'
 WEB_HTML_PATH = 'web.html'
-UPLOAD_FOLDER = '/'  # 替換為你想要保存文件的目錄
+UPLOAD_FOLDER = '/home/jetson'  # 替換為你想要保存文件的目錄
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Initialize the camera
@@ -122,7 +122,7 @@ def files():
         return jsonify({"status": "success", "message": "File uploaded successfully"}), 200
 
     if request.method == 'GET':
-        path = request.args.get('path', ' ')
+        path = request.args.get('path', ' ').strip()
         download = request.args.get('download', '')
         full_path = os.path.join(app.config['UPLOAD_FOLDER'], path)
 
