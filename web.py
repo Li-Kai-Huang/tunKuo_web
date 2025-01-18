@@ -130,7 +130,7 @@ def files():
 
     if request.method == 'GET':
         path = request.args.get('path', ' ').strip()
-        download = request.args.get('files', '')
+        download = request.args.get('download', '')
         full_path = os.path.join(app.config['UPLOAD_FOLDER'], path)
 
         if download:
