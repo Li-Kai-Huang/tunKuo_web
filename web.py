@@ -120,7 +120,6 @@ def cameras():
 
 @app.route('/files', methods=['GET', 'POST'])
 def files():
-        # 處理 POST 請求，上傳檔案
     if request.method == 'POST':
         if 'file' not in request.files:
             return jsonify({"status": "error", "message": "No file part"}), 400
@@ -131,30 +130,17 @@ def files():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return jsonify({"status": "success", "message": "File uploaded successfully"}), 200
 
-    # 處理 GET 請求，列出或顯示檔案內容
     if request.method == 'GET':
-        path = request.args.get('path', '').strip()
+        path = request.args.get('path', ' ').strip()
         download = request.args.get('download', '').strip()
-
-        if not path:
-            return jsonify({"status": "error", "message": "Path is required"}), 400
-        
         full_path = os.path.join(app.config['DOWNLOAD_FOLDER'], path)
 
-        if not os.path.exists(full_path):
-            return jsonify({"status": "error", "message": "File does not exist"}), 404
-
-        # 如果需要下載文件
         if download:
             return send_from_directory(app.config['DOWNLOAD_FOLDER'], path, as_attachment=True)
 
-        # 如果是文本檔案，返回檔案內容
-        if path.endswith(('.py', '.sh')):
-            with open(full_path, 'r') as f:
-                content = f.read()
-            return jsonify({"status": "success", "content": content}), 200
-
-        # 列出目錄內容
+        if not os.path.exists(full_path):
+            return jsonify({"status": "error", "message": "Path does not exist"}), 400
+        
         files_list = os.listdir(full_path)
         files_info = []
         for file in files_list:
@@ -164,30 +150,6 @@ def files():
                 "isDirectory": os.path.isdir(file_path)
             })
         return jsonify(files_info)
-
-    # 如果是 POST 請求來保存檔案內容
-    elif request.method == 'POST':
-        data = request.get_json()
-        path = data.get('path', '').strip()
-        content = data.get('content', '').strip()
-
-        if not path:
-            return jsonify({"status": "error", "message": "Path is required"}), 400
-        
-        full_path = os.path.join(app.config['DOWNLOAD_FOLDER'], path)
-
-        if not os.path.exists(full_path):
-            return jsonify({"status": "error", "message": "File does not exist"}), 404
-
-        # 只允許編輯 .txt 和 .sh 檔案
-        if not path.endswith(('.txt', '.sh')):
-            return jsonify({"status": "error", "message": "File type not editable"}), 400
-
-        # 保存編輯後的內容
-        with open(full_path, 'w') as f:
-            f.write(content)
-
-        return jsonify({"status": "success", "message": "File edited successfully"}), 200
 
 @app.route('/img', methods=['GET'])
 def img():
