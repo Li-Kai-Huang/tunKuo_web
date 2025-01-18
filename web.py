@@ -129,7 +129,7 @@ def files():
         return jsonify({"status": "success", "message": "File uploaded successfully"}), 200
 
     if request.method == 'GET':
-        path = request.args.get('path', ' ').strip()
+        path = request.args.get('path', ' ')
         download = request.args.get('download', '').strip()
         full_path = os.path.join(app.config['UPLOAD_FOLDER'], path)
 
