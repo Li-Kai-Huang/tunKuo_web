@@ -15,7 +15,9 @@ app = Flask(__name__)
 MAIN_PY_PATH = '/home/jetson/main.py'
 MAIN_SH_PATH = '/home/jetson/main.sh'
 WEB_HTML_PATH = 'web.html'
-UPLOAD_FOLDER = '/'  # 替換為你想要保存文件的目錄
+DOWNLOAD_FOLDER = '/'  # 替換為你想要保存文件的目錄
+UPLOAD_FOLDER = '/home/jetson'
+app.config['DOWNLOAD_FOLDER'] = DOWNLOAD_FOLDER
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Initialize the camera
@@ -131,10 +133,10 @@ def files():
     if request.method == 'GET':
         path = request.args.get('path', ' ').strip()
         download = request.args.get('download', '').strip()
-        full_path = os.path.join(app.config['UPLOAD_FOLDER'], path)
+        full_path = os.path.join(app.config['DOWNLOAD_FOLDER'], path)
 
         if download:
-            return send_from_directory(app.config['UPLOAD_FOLDER'], path, as_attachment=True)
+            return send_from_directory(app.config['DOWNLOAD_FOLDER'], path, as_attachment=True)
 
         if not os.path.exists(full_path):
             return jsonify({"status": "error", "message": "Path does not exist"}), 400
