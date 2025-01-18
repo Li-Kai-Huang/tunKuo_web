@@ -278,8 +278,8 @@
                                   <input type="file" id="fileInput" name="file">
                                   <button type="button" onclick="uploadFile()">上傳</button>
                               </form>
-                              <button onclick="downloadFile('//home/jetson/main.py')">下載 main.py</button>
-                              <button onclick="downloadFile('//home/jetson/main.sh')">下載 main.sh</button>
+                              <button onclick="downloadFile('/home/jetson/main.py')">下載 main.py</button>
+                              <button onclick="downloadFile('/home/jetson/main.sh')">下載 main.sh</button>
                               <h2>web 目錄檔案</h2>
                               <ul id="fileList" class="file-list"></ul>
                           </div>
@@ -321,19 +321,9 @@
       }
       function downloadFile(filename) {
         const sanitizedFilename = filename.startsWith("/")
-          ? filename.slice(1) // 去掉前綴的 "/"
+          ? filename.slice(1)
           : filename;
-
-        // 後端的 URL 格式為 /files?path=檔案路徑&download=true
-        const downloadUrl = `/files?path=${sanitizedFilename}&download=true`;
-
-        // 創建一個隱藏的 `<a>` 來觸發下載
-        const link = document.createElement("a");
-        link.href = downloadUrl; // 設定下載鏈接
-        link.download = filename; // 設定檔案下載時顯示的檔名
-        document.body.appendChild(link);
-        link.click(); // 觸發下載
-        document.body.removeChild(link); // 下載完成後移除該鏈接
+        window.location.href = `/files?path=${sanitizedFilename}&download=true`;
       }
 
       function saveFile() {
