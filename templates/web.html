@@ -285,16 +285,16 @@
                                   <input type="file" id="fileInput" name="file">
                                   <button type="button" onclick="uploadFile()">上傳</button>
                               </form>
-                              <button onclick="downloadFile('main.py')">下載 main.py</button>
-                              <button onclick="downloadFile('main.sh')">下載 main.sh</button>
+                              <button onclick="downloadFile('/home/jetson/main.py')">下載 main.py</button>
+                              <button onclick="downloadFile('/home/jetson/main.sh')">下載 main.sh</button>
                               <h2>web 目錄檔案</h2>
                               <ul id="fileList" class="file-list"></ul>
                           </div>
                           <div id="edition" class="tabcontent">
                               <h2>編輯檔案內容</h2>
                               <select id="fileSelect" onchange="fetchFileContent()">
-                                  <option value="home/jetson/main.py">main.py</option>
-                                  <option value="home/jetson/main.sh">main.sh</option>
+                                  <option value="main.py">main.py</option>
+                                  <option value="main.sh">main.sh</option>
                               </select>
                               <textarea id="fileContent" rows="10" cols="50"></textarea>
                               <button type="button" onclick="saveFile()">存檔</button>
