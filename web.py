@@ -128,30 +128,46 @@ def cameras():
 @app.route('/files', methods=['GET', 'POST'])
 def files():
     if request.method == 'POST':
-       # 檢查是否有檔案
-       if 'file' not in request.files:
-           return jsonify({"status": "error", "message": "No file part"}), 400
-       
-       file = request.files['file']
-       
-       # 檢查檔案是否選擇了
-       if file.filename == '':
-           return jsonify({"status": "error", "message": "No selected file"}), 400
-       
-       # 獲取檔案名稱
-       filename = request.form.get("filename") if request.form.get("filename") else file.filename
-       
-       if not filename:
-           return jsonify({"status": "error", "message": "缺少檔案名稱"}), 400
-       # 儲存檔案
-       try:
-           # 生成完整檔案儲存路徑
-           file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-           # 將檔案保存到指定路徑
-           file.save(file_path)
-           return jsonify({"status": "success", "message": f"檔案 {filename} 儲存成功"}), 200
-       except Exception as e:
-           return jsonify({"status": "error", "message": str(e)}), 500
+        # 檢查是否有檔案
+        if 'file' in request.files:
+            # 檔案上傳
+            file = request.files['file']
+            if file.filename == '':
+                return jsonify({"status": "error", "message": "No selected file"}), 400
+            filename = request.form.get("filename") if request.form.get("filename") else file.filename
+
+            # 儲存檔案
+            try:
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                file.save(file_path)
+
+                return jsonify({"status": "success", "message": f"檔案 {filename} 儲存成功"}), 200
+            except Exception as e:
+                return jsonify({"status": "error", "message": str(e)}), 500
+
+        elif 'filename' in request.form and 'content' in request.files:
+            # 編輯檔案內容
+            filename = request.form.get('filename')
+            content_file = request.files['content']
+
+            if not filename:
+                return jsonify({"status": "error", "message": "缺少檔案名稱"}), 400
+            if not content_file:
+                return jsonify({"status": "error", "message": "缺少檔案內容"}), 400
+
+            # 儲存檔案內容
+            try:
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                with open(file_path, 'wb') as f:
+                    f.write(content_file.read())  # 儲存傳送的檔案內容
+
+                return jsonify({"status": "success", "message": f"檔案 {filename} 儲存成功"}), 200
+            except Exception as e:
+                return jsonify({"status": "error", "message": str(e)}), 500
+
+        else:
+            return jsonify({"status": "error", "message": "未知的請求"}), 400
+
 
     if request.method == 'GET':
         path = request.args.get('path', ' ').strip()
