@@ -112,22 +112,22 @@
         border-radius: 4px;
         border: 1px solid #ccc;
         box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        background-color: #2d2d2d; /* 深色背景 */
-        color: #f8f8f2; /* 字體顏色 */
-        font-family: Consolas, "Courier New", monospace; /* 編碼字體 */
       }
-      .syntax-highlight .keyword { color: #66d9ef; }
-      .syntax-highlight .string { color: #a6e22e; }
-      .syntax-highlight .comment { color: #75715e; }
-      .syntax-highlight .number { color: #ae81ff; }
-      .syntax-highlight .operator { color: #f92672; }
-      .syntax-highlight .function { color: #e6db74; }
-    </style>
-  </head>
 
-  <body>
-    <div class="sidebar">
-      <ul>
+      button {
+        padding: 4px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #28a745;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #218838;
+      }
+
       .file-list {
         list-style-type: none;
         padding: 0;
@@ -303,7 +303,7 @@
                                     <option value="home/jetson/main.py">main.py</option>
                                     <option value="home/jetson/main.sh">main.sh</option>
                                 </select>
-                                <textarea id="fileContent" rows="20" cols="50" onkeydown="handleTab(event)" oninput="highlightSyntax()"></textarea>
+                                <textarea id="fileContent" rows="100" cols="50" onkeydown="handleTab(event)" oninput="highlightSyntax()"></textarea>
                                 <button type="button" onclick="saveFile()">存檔</button>
                             </div>
                         `;
