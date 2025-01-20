@@ -106,28 +106,37 @@
         background-color: #fff;
       }
 
-      /* 設置 textarea 可調整大小 */
-      textarea {
-        width: 100%; /* 寬度填滿容器 */
-        height: 200px; /* 初始高度 */
-        resize: vertical; /* 允許用戶垂直調整大小 */
-        overflow-y: auto; /* 允許垂直滾動 */
-        font-family: monospace; /* 設置單字型字體 */
-        font-size: 14px; /* 字型大小 */
-      }
-
-      /* 讓 pre 元素支援滾動條並顯示代碼 */
+      /* 使編輯器區域背景為黑色，文字為白色 */
+      textarea,
       .code-display {
+        background-color: #2e2e2e; /* 黑色背景 */
+        color: white; /* 白色文字 */
+        border: 1px solid #444; /* 邊框顏色 */
+        border-radius: 5px; /* 邊框圓角 */
+        font-family: "Courier New", Courier, monospace; /* 使用等寬字體 */
+        font-size: 14px; /* 文字大小 */
+        padding: 10px; /* 內邊距 */
         width: 100%;
-        height: 200px; /* 初始高度 */
-        overflow-y: auto; /* 允許垂直滾動 */
-        background-color: #f4f4f4;
-        padding: 10px;
-        border-radius: 5px;
-        font-family: monospace;
-        white-space: pre-wrap; /* 使代碼換行 */
+        height: 200px;
+        resize: vertical; /* 允許垂直調整大小 */
+        overflow-y: auto; /* 允許滾動 */
+        white-space: pre-wrap; /* 允許自動換行 */
       }
 
+      /* 註解顏色設定 */
+      .comment {
+        color: #a9a9a9; /* 淺灰色的註解顏色 */
+      }
+
+      /* 高亮顯示關鍵字等 (可根據需要添加更多) */
+      .keyword {
+        color: #569cd6; /* 藍色關鍵字 */
+      }
+
+      /* 其他顏色設置（如字串、數字等） */
+      .string {
+        color: #d69d85; /* 粉紅色字串 */
+      }
       button {
         padding: 4px 20px;
         border: none;
@@ -190,9 +199,6 @@
 
       th {
         background-color: #f4f4f4;
-      }
-      .comment {
-        color: #a9a9a9; /* 設置註解的顏色為淺灰色 */
       }
     </style>
   </head>
@@ -555,12 +561,38 @@
       function highlightSyntax() {
         let code = document.getElementById("fileContent").value;
 
-        // 使用正則表達式來識別 Python 註解 (以 # 開頭的部分)
+        // 註解高亮處理 (Python的註解以#開頭)
         code = code.replace(/(^|\s)(#.*)/g, function (match, p1, p2) {
           return p1 + '<span class="comment">' + p2 + "</span>";
         });
 
-        // 將處理過的代碼顯示回 textarea
+        // 關鍵字高亮處理 (這裡示範 Python 一些關鍵字)
+        const keywords = [
+          "def",
+          "class",
+          "import",
+          "for",
+          "if",
+          "else",
+          "elif",
+          "try",
+          "except",
+          "return",
+          "lambda",
+        ];
+        keywords.forEach((keyword) => {
+          const regex = new RegExp(`\\b${keyword}\\b`, "g");
+          code = code.replace(regex, function (match) {
+            return `<span class="keyword">${match}</span>`;
+          });
+        });
+
+        // 字串高亮處理 (簡單匹配 Python 字串)
+        code = code.replace(/(["'])(?:(?=(\\?))\2.)*?\1/g, function (match) {
+          return `<span class="string">${match}</span>`;
+        });
+
+        // 將高亮後的內容插入到顯示區域 (div 或 textarea)
         document.getElementById("fileContent").innerHTML = code;
       }
       // 自動調整textarea高度
