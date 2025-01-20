@@ -128,19 +128,29 @@ def cameras():
 @app.route('/files', methods=['GET', 'POST'])
 def files():
     if request.method == 'POST':
-       # 檢查是否包含檔案名稱和內容
-       filename = request.form.get("filename")
-       content = request.form.get("content")
-       if not filename or not content:
-           return jsonify({"status": "error", "message": "缺少檔案名稱或內容"}), 400
-       # 儲存檔案
-       try:
-           file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-           with open(file_path, 'w') as f:
-               f.write(content)
-           return jsonify({"status": "success", "message": "檔案儲存成功"}), 200
-       except Exception as e:
-           return jsonify({"status": "error", "message": str(e)}), 500
+       # 獲取 filename
+        filename = request.form.get("filename")
+        if not filename:
+            return jsonify({"status": "error", "message": "缺少檔案名稱"}), 400
+
+        # 檢查是否有檔案內容 (content)
+        content_file = request.files.get("content")
+        if not content_file:
+            return jsonify({"status": "error", "message": "缺少檔案內容"}), 400
+
+        # 儲存檔案
+        try:
+            # 生成完整檔案儲存路徑
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+            # 將檔案內容寫入磁碟
+            with open(file_path, 'wb') as f:
+                f.write(content_file.read())
+
+            return jsonify({"status": "success", "message": "檔案儲存成功"}), 200
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
+
 
     if request.method == 'GET':
         path = request.args.get('path', ' ').strip()
