@@ -293,8 +293,8 @@
                           <div id="edition" class="tabcontent">
                               <h2>編輯檔案內容</h2>
                               <select id="fileSelect" onchange="fetchFileContent()">
-                                  <option value="main.py">main.py</option>
-                                  <option value="main.sh">main.sh</option>
+                                  <option value="home/jetson/main.py">main.py</option>
+                                  <option value="home/jetson/main.sh">main.sh</option>
                               </select>
                               <textarea id="fileContent" rows="10" cols="50"></textarea>
                               <button type="button" onclick="saveFile()">存檔</button>
@@ -345,6 +345,7 @@
       }
       function saveFile() {
         const filename = document.getElementById("fileSelect").value;
+        filename.slice(12);
         const content = document.getElementById("fileContent").value;
         const formData = new FormData();
         formData.append("filename", filename);
