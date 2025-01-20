@@ -331,7 +331,7 @@
                                     <option value="home/jetson/main.py">main.py</option>
                                     <option value="home/jetson/main.sh">main.sh</option>
                                 </select>
-                                <textarea id="fileContent" rows="20" cols="50" onkeydown="handleTab(event)" oninput="highlightSyntax()"></textarea>
+                                <div id="fileContent" contenteditable="true" class="code-display" oninput="highlightSyntax()"></div>
                                 <button type="button" onclick="saveFile()">存檔</button>
                             </div>
                         `;
@@ -559,7 +559,7 @@
       }
       // 高亮顯示 Python 語法，特別是註解部分
       function highlightSyntax() {
-        let code = document.getElementById("fileContent").value;
+        let code = document.getElementById("fileContent").innerText;
 
         // 註解高亮處理 (Python的註解以#開頭)
         code = code.replace(/(^|\s)(#.*)/g, function (match, p1, p2) {
@@ -592,7 +592,7 @@
           return `<span class="string">${match}</span>`;
         });
 
-        // 將高亮後的內容插入到顯示區域 (div 或 textarea)
+        // 將高亮後的內容插入到顯示區域
         document.getElementById("fileContent").innerHTML = code;
       }
       // 自動調整textarea高度
