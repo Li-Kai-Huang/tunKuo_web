@@ -219,298 +219,313 @@
     </div>
 
     <script>
-      // 設置事件監聽器
-      document.getElementById("Panel").addEventListener("click", function () {
-        loadContent("Panel");
-      });
+        // 設置事件監聽器
+        document.getElementById("Panel").addEventListener("click", function () {
+          loadContent("Panel");
+        });
 
-      document.getElementById("Cameras").addEventListener("click", function () {
-        loadContent("Cameras");
-      });
+        document.getElementById("Cameras").addEventListener("click", function () {
+          loadContent("Cameras");
+        });
 
-      document.getElementById("Files").addEventListener("click", function () {
-        loadContent("Files");
-      });
-      let updateInterval;
-      // 根據選項載入內容
-      function loadContent(option) {
-        document.getElementById("welcome-message").style.display = "none";
-        if (option === "Panel") {
-          document.getElementById("content").innerHTML = `
-                          <div class="tab">
-                              <button class="tablinks" onclick="openTab(event, 'info')">INFO</button>
-                              <button class="tablinks" onclick="openTab(event, 'control')">CONTROL</button>
-                          </div>
-                          <div id="info" class="tabcontent">
-                              <h3>Jetson Orin Nano 資訊</h3>
-                              <div id="info-data">載入中...</div>
-                          </div>
-                          <div id ="control" class="tabcontent">
-                              <h3>控制面板</h3>
-                                <button onclick="sendCommand('shutdown')">關機</button>
-                                <button onclick="sendCommand('reboot')">重啟</button>
-                                <button onclick="sendCommand('restart_web_service')">重啟web服務</button>
-                                <button onclick="sendCommand('restart_maind_service')">重起maind服務</button>
+        document.getElementById("Files").addEventListener("click", function () {
+          loadContent("Files");
+        });
+        let updateInterval;
+        // 根據選項載入內容
+        function loadContent(option) {
+          document.getElementById("welcome-message").style.display = "none";
+          if (option === "Panel") {
+            document.getElementById("content").innerHTML = `
+                            <div class="tab">
+                                <button class="tablinks" onclick="openTab(event, 'info')">INFO</button>
+                                <button class="tablinks" onclick="openTab(event, 'control')">CONTROL</button>
                             </div>
-                      `;
-          openTab(null, "info");
-          fetchPanelData();
-          if (updateInterval) {
-            clearInterval(updateInterval);
+                            <div id="info" class="tabcontent">
+                                <h3>Jetson Orin Nano 資訊</h3>
+                                <div id="info-data">載入中...</div>
+                            </div>
+                            <div id ="control" class="tabcontent">
+                                <h3>控制面板</h3>
+                                  <button onclick="sendCommand('shutdown')">關機</button>
+                                  <button onclick="sendCommand('reboot')">重啟</button>
+                                  <button onclick="sendCommand('restart_web_service')">重啟web服務</button>
+                                  <button onclick="sendCommand('restart_maind_service')">重起maind服務</button>
+                              </div>
+                        `;
+            openTab(null, "info");
+            fetchPanelData();
+            if (updateInterval) {
+              clearInterval(updateInterval);
+            }
+            updateInterval = setInterval(fetchPanelData, 500); // 每5秒更新一次
+          } else if (option === "Cameras") {
+            document.getElementById("content").innerHTML = `
+                                        <div class="tab">
+                                <button class="tablinks" onclick="openTab(event, 'Camera1')">Camera 1</button>
+                                <button class="tablinks" onclick="openTab(event, 'Camera2')">Camera 2</button>
+                                <button class="tablinks" onclick="openTab(event, 'Camera3')">Camera 3</button>
+                            </div>
+                            <div id="Camera1" class="tabcontent">
+                                <h3>Camera 1</h3>
+                                <img src="/video_feed/camera1" alt="Camera 1">
+                            </div>
+                            <div id="Camera2" class="tabcontent">
+                                <h3>Camera 2</h3>
+                                <img src="/video_feed/camera2" alt="Camera 2">
+                            </div>
+                            <div id="Camera3" class="tabcontent">
+                                <h3>Camera 3</h3>
+                                <img src="/video_feed/camera3" alt="Camera 3">
+                            </div>
+                        `;
+            openTab(null, "Camera1"); // 預設打開 Camera1
+          } else if (option === "Files") {
+            document.getElementById("content").innerHTML = `
+                            <div class="tab">
+                                <button class="tablinks" onclick="openTab(event, 'doc')">doc</button>
+                                <button class="tablinks" onclick="openTab(event, 'edition')">edition</button>
+                            </div>
+                            <div id="doc" class="tabcontent">
+                                <h2>檔案上傳/下載</h2>
+                                <form id="uploadForm" enctype="multipart/form-data">
+                                    <input type="file" id="fileInput" name="file">
+                                    <button type="button" onclick="uploadFile()">上傳</button>
+                                </form>
+                                <button onclick="downloadFile('/home/jetson/main.py')">下載 main.py</button>
+                                <button onclick="downloadFile('/home/jetson/main.sh')">下載 main.sh</button>
+                                <h2>web 目錄檔案</h2>
+                                <ul id="fileList" class="file-list"></ul>
+                            </div>
+                            <div id="edition" class="tabcontent">
+                                <h2>編輯檔案內容</h2>
+                                <select id="fileSelect" onchange="fetchFileContent()">
+                                    <option value="home/jetson/main.py">main.py</option>
+                                    <option value="home/jetson/main.sh">main.sh</option>
+                                </select>
+                                <textarea id="fileContent" rows="10" cols="80" onkeydown="handleTab(event)" ></textarea>
+                                <button type="button" onclick="saveFile()">存檔</button>
+                            </div>
+                        `;
+            openTab(null, "doc"); // 預設打開 doc
+            fetchWebDirectoryFiles();
+          } else {
+            document.getElementById("content").innerHTML = `<p>資料未找到</p>`;
           }
-          updateInterval = setInterval(fetchPanelData, 500); // 每5秒更新一次
-        } else if (option === "Cameras") {
-          document.getElementById("content").innerHTML = `
-                                      <div class="tab">
-                              <button class="tablinks" onclick="openTab(event, 'Camera1')">Camera 1</button>
-                              <button class="tablinks" onclick="openTab(event, 'Camera2')">Camera 2</button>
-                              <button class="tablinks" onclick="openTab(event, 'Camera3')">Camera 3</button>
-                          </div>
-                          <div id="Camera1" class="tabcontent">
-                              <h3>Camera 1</h3>
-                              <img src="/video_feed/camera1" alt="Camera 1">
-                          </div>
-                          <div id="Camera2" class="tabcontent">
-                              <h3>Camera 2</h3>
-                              <img src="/video_feed/camera2" alt="Camera 2">
-                          </div>
-                          <div id="Camera3" class="tabcontent">
-                              <h3>Camera 3</h3>
-                              <img src="/video_feed/camera3" alt="Camera 3">
-                          </div>
-                      `;
-          openTab(null, "Camera1"); // 預設打開 Camera1
-        } else if (option === "Files") {
-          document.getElementById("content").innerHTML = `
-                          <div class="tab">
-                              <button class="tablinks" onclick="openTab(event, 'doc')">doc</button>
-                              <button class="tablinks" onclick="openTab(event, 'edition')">edition</button>
-                          </div>
-                          <div id="doc" class="tabcontent">
-                              <h2>檔案上傳/下載</h2>
-                              <form id="uploadForm" enctype="multipart/form-data">
-                                  <input type="file" id="fileInput" name="file">
-                                  <button type="button" onclick="uploadFile()">上傳</button>
-                              </form>
-                              <button onclick="downloadFile('/home/jetson/main.py')">下載 main.py</button>
-                              <button onclick="downloadFile('/home/jetson/main.sh')">下載 main.sh</button>
-                              <h2>web 目錄檔案</h2>
-                              <ul id="fileList" class="file-list"></ul>
-                          </div>
-                          <div id="edition" class="tabcontent">
-                              <h2>編輯檔案內容</h2>
-                              <select id="fileSelect" onchange="fetchFileContent()">
-                                  <option value="home/jetson/main.py">main.py</option>
-                                  <option value="home/jetson/main.sh">main.sh</option>
-                              </select>
-                              <textarea id="fileContent" rows="10" cols="50"></textarea>
-                              <button type="button" onclick="saveFile()">存檔</button>
-                          </div>
-                      `;
-          openTab(null, "doc"); // 預設打開 doc
-          fetchWebDirectoryFiles();
-        } else {
-          document.getElementById("content").innerHTML = `<p>資料未找到</p>`;
-        }
-      }
-
-      function uploadFile() {
-        var fileInput = document.getElementById('fileInput');
-        var filename = fileInput.files[0].name;  // 從檔案選擇器中獲取檔案名稱
-        var formData = new FormData();
-        
-        // 檢查是否選擇了檔案
-        if (!fileInput.files.length) {
-            alert("請選擇一個檔案");
-            return;
         }
 
-        // 附加檔案與檔案名稱到 FormData 中
-        formData.append("content", fileInput.files[0]);  // 上傳檔案
-        formData.append("filename", filename);        // 上傳檔案名稱
-        fetch("/files", {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              alert("檔案上傳成功");
-              fetchWebDirectoryFiles(); // 上傳成功後刷新文件列表
-            } else {
-              alert(`錯誤: ${data.message}`);
-            }
+        function uploadFile() {
+          var fileInput = document.getElementById('fileInput');
+          var filename = fileInput.files[0].name;  // 從檔案選擇器中獲取檔案名稱
+          var formData = new FormData();
+
+          // 檢查是否選擇了檔案
+          if (!fileInput.files.length) {
+              alert("請選擇一個檔案");
+              return;
+          }
+
+          // 附加檔案與檔案名稱到 FormData 中
+          formData.append("content", fileInput.files[0]);  // 上傳檔案
+          formData.append("filename", filename);        // 上傳檔案名稱
+          fetch("/files", {
+            method: "POST",
+            body: formData,
           })
-          .catch((error) => {
-            alert("檔案上傳失敗");
-          });
-      }
-      function downloadFile(filename) {
-        const sanitizedFilename = filename.startsWith("/")
-          ? filename.slice(1)
-          : filename;
-        window.location.href = `/files?path=${sanitizedFilename}&download=true`;
-      }
-      function fetchFileContent() {
-        const filename = document.getElementById("fileSelect").value;
-        fetch(`/files?path=${filename}&download=false`)
-          .then((response) => response.text())
-          .then((data) => {
-            document.getElementById("fileContent").value = data;
-          })
-          .catch((error) => {
-            alert("ERROR");
-          });
-      }
-      function saveFile() {
-        let filename = document.getElementById("fileSelect").value;
-        const content = document.getElementById("fileContent").value;
-        const formData = new FormData();
-        if (filename.startsWith("home/jetson/")) {
-          filename = filename.replace("home/jetson/", "");
-        }
-        formData.append("filename", filename);
-        formData.append("content", new Blob([content], { type: "text/plain" }));
-        fetch("/files", {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              alert("檔案儲存成功");
-            } else {
-              alert("儲存失敗: " + data.message);
-            }
-          })
-          .catch((error) => {
-            alert("檔案儲存失敗");
-          });
-      }
-      function fetchWebDirectoryFiles(path = "") {
-        fetch(`/files?path=${path}`)
-          .then((response) => response.json())
-          .then((items) => {
-            const fileList = document.getElementById("fileList");
-            fileList.innerHTML = ""; // 清空現有列表
-            items.forEach((item) => {
-              const listItem = document.createElement("li");
-              if (item.isDirectory) {
-                const link = document.createElement("a");
-                link.href = "#";
-                link.textContent = item.name;
-                link.style.color = "red"; // 根目錄下的目錄換色
-                link.onclick = () => {
-                  fetchWebDirectoryFiles(`${path}/${item.name}`);
-                  return false; // 防止默認行為
-                };
-                listItem.appendChild(link);
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                alert("檔案上傳成功");
+                fetchWebDirectoryFiles(); // 上傳成功後刷新文件列表
               } else {
+                alert(`錯誤: ${data.message}`);
+              }
+            })
+            .catch((error) => {
+              alert("檔案上傳失敗");
+            });
+        }
+        function downloadFile(filename) {
+          const sanitizedFilename = filename.startsWith("/")
+            ? filename.slice(1)
+            : filename;
+          window.location.href = `/files?path=${sanitizedFilename}&download=true`;
+        }
+        function fetchFileContent() {
+          const filename = document.getElementById("fileSelect").value;
+          fetch(`/files?path=${filename}&download=false`)
+            .then((response) => response.text())
+            .then((data) => {
+              document.getElementById("fileContent").value = data;
+            })
+            .catch((error) => {
+              alert("ERROR");
+            });
+        }
+        function saveFile() {
+          let filename = document.getElementById("fileSelect").value;
+          const content = document.getElementById("fileContent").value;
+          const formData = new FormData();
+          if (filename.startsWith("home/jetson/")) {
+            filename = filename.replace("home/jetson/", "");
+          }
+          formData.append("filename", filename);
+          formData.append("content", new Blob([content], { type: "text/plain" }));
+          fetch("/files", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                alert("檔案儲存成功");
+              } else {
+                alert("儲存失敗: " + data.message);
+              }
+            })
+            .catch((error) => {
+              alert("檔案儲存失敗");
+            });
+        }
+        function fetchWebDirectoryFiles(path = "") {
+          fetch(`/files?path=${path}`)
+            .then((response) => response.json())
+            .then((items) => {
+              const fileList = document.getElementById("fileList");
+              fileList.innerHTML = ""; // 清空現有列表
+              items.forEach((item) => {
+                const listItem = document.createElement("li");
+                if (item.isDirectory) {
+                  const link = document.createElement("a");
+                  link.href = "#";
+                  link.textContent = item.name;
+                  link.style.color = "red"; // 根目錄下的目錄換色
+                  link.onclick = () => {
+                    fetchWebDirectoryFiles(`${path}/${item.name}`);
+                    return false; // 防止默認行為
+                  };
+                  listItem.appendChild(link);
+                } else {
+                  const link = document.createElement("a");
+                  link.href = "#";
+                  link.textContent = item.name;
+                  link.onclick = () => {
+                    downloadFile(`${path}/${item.name}`);
+                    return false; // 防止默認行為
+                  };
+                  listItem.appendChild(link);
+                }
+                fileList.appendChild(listItem);
+              });
+              // 如果有子目錄，則顯示返回按鈕
+              if (path) {
+                const listItem = document.createElement("li");
                 const link = document.createElement("a");
                 link.href = "#";
-                link.textContent = item.name;
+                link.textContent = "返回上層";
                 link.onclick = () => {
-                  downloadFile(`${path}/${item.name}`);
-                  return false; // 防止默認行為
+                  fetchWebDirectoryFiles(path.split("/").slice(0, -1).join("/"));
+                  return false;
                 };
                 listItem.appendChild(link);
+                fileList.insertBefore(listItem, fileList.firstChild);
               }
-              fileList.appendChild(listItem);
+            })
+            .catch((error) => {
+              alert("無法獲取 web 目錄檔案");
             });
-            // 如果有子目錄，則顯示返回按鈕
-            if (path) {
-              const listItem = document.createElement("li");
-              const link = document.createElement("a");
-              link.href = "#";
-              link.textContent = "返回上層";
-              link.onclick = () => {
-                fetchWebDirectoryFiles(path.split("/").slice(0, -1).join("/"));
-                return false;
-              };
-              listItem.appendChild(link);
-              fileList.insertBefore(listItem, fileList.firstChild);
-            }
-          })
-          .catch((error) => {
-            alert("無法獲取 web 目錄檔案");
-          });
-      }
-      function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-          tabcontent[i].style.display = "none";
         }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        if (evt) {
-          evt.currentTarget.className += " active";
-        }
-        document.getElementById(tabName).style.display = "block";
-      }
-      function fetchPanelData() {
-        fetch(`/panel`)
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              const infoData = document.getElementById("info-data");
-              infoData.innerHTML = generateTable(data.data);
-            } else {
-              document.getElementById(
-                `info-data`
-              ).innerText = `error: ${data.message}`;
-            }
-          })
-          .catch((error) => {
-            document.getElementById(`info-data`).innerText = `error: ${error}`;
-          });
-      }
-      function sendCommand(command) {
-        fetch("/panel", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ command: command }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              alert(`error: ${data.message}`);
-            } else {
-              alert(`success: ${data.message}`);
-            }
-          })
-          .catch((error) => {
-            alert(`error: ${error}`);
-          });
-      }
-      function generateTable(data) {
-        const units = {
-          temp: "°C",
-          power: "mW",
-          cpu: "%",
-          gpu: "%",
-          // 添加更多需要的單位
-        };
-
-        let table = "<table>";
-        for (let key in data) {
-          let unit = "";
-          // 使用部分匹配來添加單位
-          for (let unitKey in units) {
-            if (key.toLowerCase().includes(unitKey)) {
-              unit = ` ${units[unitKey]}`;
-              break;
-            }
+        function openTab(evt, tabName) {
+          var i, tabcontent, tablinks;
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
           }
-          table += `<tr><th>${key}</th><td>${data[key]}${unit}</td></tr>`;
+          tablinks = document.getElementsByClassName("tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+          if (evt) {
+            evt.currentTarget.className += " active";
+          }
+          document.getElementById(tabName).style.display = "block";
         }
-        table += "</table>";
-        return table;
-      }
+        function fetchPanelData() {
+          fetch(`/panel`)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                const infoData = document.getElementById("info-data");
+                infoData.innerHTML = generateTable(data.data);
+              } else {
+                document.getElementById(
+                  `info-data`
+                ).innerText = `error: ${data.message}`;
+              }
+            })
+            .catch((error) => {
+              document.getElementById(`info-data`).innerText = `error: ${error}`;
+            });
+        }
+        function sendCommand(command) {
+          fetch("/panel", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ command: command }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                alert(`error: ${data.message}`);
+              } else {
+                alert(`success: ${data.message}`);
+              }
+            })
+            .catch((error) => {
+              alert(`error: ${error}`);
+            });
+        }
+        function generateTable(data) {
+          const units = {
+            temp: "°C",
+            power: "mW",
+            cpu: "%",
+            gpu: "%",
+            // 添加更多需要的單位
+          };
+
+          let table = "<table>";
+          for (let key in data) {
+            let unit = "";
+            // 使用部分匹配來添加單位
+            for (let unitKey in units) {
+              if (key.toLowerCase().includes(unitKey)) {
+                unit = ` ${units[unitKey]}`;
+                break;
+              }
+            }
+            table += `<tr><th>${key}</th><td>${data[key]}${unit}</td></tr>`;
+          }
+          table += "</table>";
+          return table;
+        }
+        // 處理 Tab 鍵輸入
+      function handleTab(event) {
+          if (event.key === "Tab") {
+              event.preventDefault();  // 防止 Tab 切換焦點
+              var textarea = event.target;
+              var start = textarea.selectionStart;
+              var end = textarea.selectionEnd;
+
+              // 在選中的範圍插入制表符 (Tab)
+              textarea.value = textarea.value.substring(0, start) + "\t" + textarea.value.substring(end);
+
+              // 將光標移動到插入的位置
+              textarea.selectionStart = textarea.selectionEnd = start + 1;
+          }
+        }
     </script>
   </body>
 </html>
