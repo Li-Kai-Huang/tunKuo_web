@@ -326,7 +326,7 @@
         }
 
         // 附加檔案與檔案名稱到 FormData 中
-        formData.append("file", fileInput.files[0]);  // 上傳檔案
+        formData.append("content", fileInput.files[0]);  // 上傳檔案
         formData.append("filename", filename);        // 上傳檔案名稱
         fetch("/files", {
           method: "POST",
