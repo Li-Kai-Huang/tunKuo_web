@@ -351,11 +351,15 @@
         formData.append("content", new Blob([content], { type: "text/plain" }));
         fetch("/files", {
           method: "POST",
-          body:formData,
+          body: formData,
         })
           .then((response) => response.json())
           .then((data) => {
+            if (data.status === "success") {
             alert("檔案儲存成功");
+        } else {
+            alert("儲存失敗: " + data.message);
+        }
           })
           .catch((error) => {
             alert("檔案儲存失敗");

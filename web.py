@@ -128,14 +128,19 @@ def cameras():
 @app.route('/files', methods=['GET', 'POST'])
 def files():
     if request.method == 'POST':
-        if 'file' not in request.files:
-            return jsonify({"status": "error", "message": "No file part"}), 400
-        file = request.files['file']
-        if file.filename == '':
-            return jsonify({"status": "error", "message": "No selected file"}), 400
-        filename = file.filename
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        return jsonify({"status": "success", "message": "File uploaded successfully"}), 200
+       # 檢查是否包含檔案名稱和內容
+       filename = request.form.get("filename")
+       content = request.form.get("content")
+       if not filename or not content:
+           return jsonify({"status": "error", "message": "缺少檔案名稱或內容"}), 400
+       # 儲存檔案
+       try:
+           file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+           with open(file_path, 'w') as f:
+               f.write(content)
+           return jsonify({"status": "success", "message": "檔案儲存成功"}), 200
+       except Exception as e:
+           return jsonify({"status": "error", "message": str(e)}), 500
 
     if request.method == 'GET':
         path = request.args.get('path', ' ').strip()
