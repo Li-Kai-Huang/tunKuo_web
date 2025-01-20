@@ -192,17 +192,25 @@
     <div class="main-content">
       <h1 id="welcome-message">Welcome Using this tools</h1>
       <div id="content" class="data-box">
-        <!-- 這裡會顯示來自後端的資料 -->
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'info')">INFO</button>
+            <button class="tablinks" onclick="openTab(event, 'control')">CONTROL</button>
+        </div>
+        <div id="info" class="tabcontent">
+            <h3>Jetson Orin Nano 資訊</h3>
+            <div id="info-data">載入中...</div>
+        </div>
+        <div id ="control" class="tabcontent">
+            <h3>控制面板</h3>
+              <button onclick="sendCommand('shutdown')">關機</button>
+              <button onclick="sendCommand('reboot')">重啟</button>
+              <button onclick="sendCommand('restart_web_service')">重啟web服務</button>
+              <button onclick="sendCommand('restart_maind_service')">重起maind服務</button>
+          </div>
       </div>
     </div>
 
     <script>
-      /*const mockData = {
-                      option1: { title: '??賊?? 1', description: '?????舫?賊?? 1 ???鞈????' },
-                      option2: { title: '??賊?? 2', description: '?????舫?賊?? 2 ???鞈????' },
-                      option3: { title: '??賊?? 3', description: '?????舫?賊?? 3 ???鞈????' },
-                      option4: { title: '??賊?? 4', description: '?????舫?賊?? 4 ???鞈????' },
-                  };*/
 
       // 設置事件監聽器
       document.getElementById("Panel").addEventListener("click", function () {
@@ -236,7 +244,6 @@
                                 <button onclick="sendCommand('reboot')">重啟</button>
                                 <button onclick="sendCommand('restart_web_service')">重啟web服務</button>
                                 <button onclick="sendCommand('restart_maind_service')">重起maind服務</button>
-                                <button onclick="sendCommand('stop_service')">停止服務</button>
                             </div>
                       `;
           openTab(null, "info");
