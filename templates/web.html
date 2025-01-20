@@ -112,71 +112,16 @@
         border-radius: 4px;
         border: 1px solid #ccc;
         box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        background-color: #2d2d2d; /* 深色背景 */
+        color: #f8f8f2; /* 字體顏色 */
+        font-family: Consolas, "Courier New", monospace; /* 編碼字體 */
       }
-
-      button {
-        padding: 4px 20px;
-        border: none;
-        border-radius: 4px;
-        background-color: #28a745;
-        color: white;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      button:hover {
-        background-color: #218838;
-      }
-
-      .file-list {
-        list-style-type: none;
-        padding: 0;
-      }
-
-      .file-list li {
-        margin: 10px 0;
-        padding: 10px;
-        background-color: #f4f4f4;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        transition: background-color 0.3s;
-      }
-
-      .file-list li a {
-        text-decoration: none;
-        color: #007bff;
-        font-weight: bold;
-      }
-
-      .file-list li a:hover {
-        text-decoration: underline;
-      }
-
-      .file-list li:hover {
-        background-color: #e9e9e9;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-      }
-
-      table,
-      th,
-      td {
-        border: 1px solid #ccc;
-      }
-
-      th,
-      td {
-        padding: 10px;
-        text-align: left;
-      }
-
-      th {
-        background-color: #f4f4f4;
-      }
+      .syntax-highlight .keyword { color: #66d9ef; }
+      .syntax-highlight .string { color: #a6e22e; }
+      .syntax-highlight .comment { color: #75715e; }
+      .syntax-highlight .number { color: #ae81ff; }
+      .syntax-highlight .operator { color: #f92672; }
+      .syntax-highlight .function { color: #e6db74; }
     </style>
   </head>
 
@@ -303,7 +248,7 @@
                                     <option value="home/jetson/main.py">main.py</option>
                                     <option value="home/jetson/main.sh">main.sh</option>
                                 </select>
-                                <textarea id="fileContent" rows="20" cols="50" onkeydown="handleTab(event)" oninput="highlightSyntax()"></textarea>
+                                <textarea id="fileContent" rows="20" cols="50" onkeydown="handleTab(event)" oninput="highlightSyntax()" class="syntax-highlight"></textarea>
                                 <button type="button" onclick="saveFile()">存檔</button>
                             </div>
                         `;
@@ -525,6 +470,33 @@
               // 將光標移動到插入的位置
               textarea.selectionStart = textarea.selectionEnd = start + 4;
           }
+        }
+        function highlightSyntax() {
+          const textarea = document.getElementById("fileContent");
+          const code = textarea.value;
+          const highlightedCode = code
+            .replace(/(\/\/.*$)/gm, '<span class="comment">$1</span>') // 注釋
+            .replace(/(#.*$)/gm, '<span class="comment">$1</span>') // Python 注釋
+            .replace(/(".*?"|'.*?'|`.*?`)/g, '<span class="string">$1</span>') // 字串
+            .replace(/\b(\d+)\b/g, '<span class="number">$1</span>') // 數字
+            .replace(/\b(const|let|var|function|if|else|for|while|return|class|new|this|throw|catch|try|finally|switch|case|break|continue|default|do|in|instanceof|typeof|void|delete|await|async|yield|import|export|from|as|extends|super|static|get|set|constructor|public|private|protected|readonly|abstract|interface|implements|enum|namespace|type|declare|module|require|namespace|keyof|readonly|infer|is|unknown|never|any|boolean|number|string|symbol|object|undefined|null|true|false|def|print|lambda|with|as|pass|yield|assert|del|elif|except|finally|global|nonlocal|raise|try|while|async|await|from|import|None|True|False)\b/g, '<span class="keyword">$1</span>') // 關鍵字
+            .replace(/(\+|\-|\*|\/|\%|\=|\!|\&|\||\^|\~|\?|:|<|>)/g, '<span class="operator">$1</span>') // 運算符
+            .replace(/\b(def|class)\s+(\w+)/g, '<span class="keyword">$1</span> <span class="function">$2</span>'); // 函數和類
+
+          const highlightedDiv = document.createElement("div");
+          highlightedDiv.innerHTML = highlightedCode;
+          highlightedDiv.style.whiteSpace = "pre-wrap";
+          highlightedDiv.style.fontFamily = "inherit";
+          highlightedDiv.style.fontSize = "inherit";
+          highlightedDiv.style.lineHeight = "inherit";
+          highlightedDiv.style.color = "inherit";
+          highlightedDiv.style.backgroundColor = "inherit";
+
+          textarea.parentNode.replaceChild(highlightedDiv, textarea);
+          highlightedDiv.contentEditable = true;
+          highlightedDiv.id = "fileContent";
+          highlightedDiv.onkeydown = handleTab;
+          highlightedDiv.oninput = highlightSyntax;
         }
     </script>
   </body>
