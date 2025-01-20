@@ -351,10 +351,7 @@
         formData.append("content", new Blob([content], { type: "text/plain" }));
         fetch("/files", {
           method: "POST",
-          headers: {
-            "Content-Type": "multipart/fromdata",
-          },
-          body: JSON.stringify({ filename: filename, content: content }),
+          body:formData,
         })
           .then((response) => response.json())
           .then((data) => {
