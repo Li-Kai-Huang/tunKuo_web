@@ -106,37 +106,14 @@
         background-color: #fff;
       }
 
-      /* 使編輯器區域背景為黑色，文字為白色 */
-      textarea,
-      .code-display {
-        background-color: #2e2e2e; /* 黑色背景 */
-        color: white; /* 白色文字 */
-        border: 1px solid #444; /* 邊框顏色 */
-        border-radius: 5px; /* 邊框圓角 */
-        font-family: "Courier New", Courier, monospace; /* 使用等寬字體 */
-        font-size: 14px; /* 文字大小 */
-        padding: 10px; /* 內邊距 */
+      textarea {
         width: 100%;
-        height: 200px;
-        resize: vertical; /* 允許垂直調整大小 */
-        overflow-y: auto; /* 允許滾動 */
-        white-space: pre-wrap; /* 允許自動換行 */
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
       }
 
-      /* 註解顏色設定 */
-      .comment {
-        color: #a9a9a9; /* 淺灰色的註解顏色 */
-      }
-
-      /* 高亮顯示關鍵字等 (可根據需要添加更多) */
-      .keyword {
-        color: #569cd6; /* 藍色關鍵字 */
-      }
-
-      /* 其他顏色設置（如字串、數字等） */
-      .string {
-        color: #d69d85; /* 粉紅色字串 */
-      }
       button {
         padding: 4px 20px;
         border: none;
@@ -242,29 +219,24 @@
     </div>
 
     <script>
-      // 設置事件監聽器
-      document.getElementById("Panel").addEventListener("click", function () {
-        loadContent("Panel");
-      });
-
-      document.getElementById("Cameras").addEventListener("click", function () {
-        loadContent("Cameras");
-      });
-
-      document.getElementById("Files").addEventListener("click", function () {
-        loadContent("Files");
-      });
-      document
-        .getElementById("fileContent")
-        .addEventListener("input", function () {
-          autoResizeTextarea(this);
+        // 設置事件監聽器
+        document.getElementById("Panel").addEventListener("click", function () {
+          loadContent("Panel");
         });
-      let updateInterval;
-      // 根據選項載入內容
-      function loadContent(option) {
-        document.getElementById("welcome-message").style.display = "none";
-        if (option === "Panel") {
-          document.getElementById("content").innerHTML = `
+
+        document.getElementById("Cameras").addEventListener("click", function () {
+          loadContent("Cameras");
+        });
+
+        document.getElementById("Files").addEventListener("click", function () {
+          loadContent("Files");
+        });
+        let updateInterval;
+        // 根據選項載入內容
+        function loadContent(option) {
+          document.getElementById("welcome-message").style.display = "none";
+          if (option === "Panel") {
+            document.getElementById("content").innerHTML = `
                             <div class="tab">
                                 <button class="tablinks" onclick="openTab(event, 'info')">INFO</button>
                                 <button class="tablinks" onclick="openTab(event, 'control')">CONTROL</button>
@@ -281,14 +253,14 @@
                                   <button onclick="sendCommand('restart_maind_service')">重起maind服務</button>
                               </div>
                         `;
-          openTab(null, "info");
-          fetchPanelData();
-          if (updateInterval) {
-            clearInterval(updateInterval);
-          }
-          updateInterval = setInterval(fetchPanelData, 500); // 每5秒更新一次
-        } else if (option === "Cameras") {
-          document.getElementById("content").innerHTML = `
+            openTab(null, "info");
+            fetchPanelData();
+            if (updateInterval) {
+              clearInterval(updateInterval);
+            }
+            updateInterval = setInterval(fetchPanelData, 500); // 每5秒更新一次
+          } else if (option === "Cameras") {
+            document.getElementById("content").innerHTML = `
                                         <div class="tab">
                                 <button class="tablinks" onclick="openTab(event, 'Camera1')">Camera 1</button>
                                 <button class="tablinks" onclick="openTab(event, 'Camera2')">Camera 2</button>
@@ -307,9 +279,9 @@
                                 <img src="/video_feed/camera3" alt="Camera 3">
                             </div>
                         `;
-          openTab(null, "Camera1"); // 預設打開 Camera1
-        } else if (option === "Files") {
-          document.getElementById("content").innerHTML = `
+            openTab(null, "Camera1"); // 預設打開 Camera1
+          } else if (option === "Files") {
+            document.getElementById("content").innerHTML = `
                             <div class="tab">
                                 <button class="tablinks" onclick="openTab(event, 'doc')">doc</button>
                                 <button class="tablinks" onclick="openTab(event, 'edition')">edition</button>
@@ -331,275 +303,229 @@
                                     <option value="home/jetson/main.py">main.py</option>
                                     <option value="home/jetson/main.sh">main.sh</option>
                                 </select>
-                                <div id="fileContent" contenteditable="true" class="code-display" oninput="highlightSyntax()"></div>
+                                <textarea id="fileContent" rows="100" cols="50" onkeydown="handleTab(event)" oninput="highlightSyntax()"></textarea>
                                 <button type="button" onclick="saveFile()">存檔</button>
                             </div>
                         `;
-          openTab(null, "doc"); // 預設打開 doc
-          fetchWebDirectoryFiles();
-        } else {
-          document.getElementById("content").innerHTML = `<p>資料未找到</p>`;
-        }
-      }
-
-      function uploadFile() {
-        var fileInput = document.getElementById("fileInput");
-        var filename = fileInput.files[0].name; // 從檔案選擇器中獲取檔案名稱
-        var formData = new FormData();
-
-        // 檢查是否選擇了檔案
-        if (!fileInput.files.length) {
-          alert("請選擇一個檔案");
-          return;
-        }
-
-        // 附加檔案與檔案名稱到 FormData 中
-        formData.append("content", fileInput.files[0]); // 上傳檔案
-        formData.append("filename", filename); // 上傳檔案名稱
-        fetch("/files", {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              alert("檔案上傳成功");
-              fetchWebDirectoryFiles(); // 上傳成功後刷新文件列表
-            } else {
-              alert(`錯誤: ${data.message}`);
-            }
-          })
-          .catch((error) => {
-            alert("檔案上傳失敗");
-          });
-      }
-      function downloadFile(filename) {
-        const sanitizedFilename = filename.startsWith("/")
-          ? filename.slice(1)
-          : filename;
-        window.location.href = `/files?path=${sanitizedFilename}&download=true`;
-      }
-      function fetchFileContent() {
-        const filename = document.getElementById("fileSelect").value;
-        fetch(`/files?path=${filename}&download=false`)
-          .then((response) => response.text())
-          .then((data) => {
-            document.getElementById("fileContent").value = data;
-          })
-          .catch((error) => {
-            alert("ERROR");
-          });
-      }
-      function saveFile() {
-        let filename = document.getElementById("fileSelect").value;
-        const content = document.getElementById("fileContent").value;
-        const formData = new FormData();
-        if (filename.startsWith("home/jetson/")) {
-          filename = filename.replace("home/jetson/", "");
-        }
-        formData.append("filename", filename);
-        formData.append("content", new Blob([content], { type: "text/plain" }));
-        fetch("/files", {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              alert("檔案儲存成功");
-            } else {
-              alert("儲存失敗: " + data.message);
-            }
-          })
-          .catch((error) => {
-            alert("檔案儲存失敗");
-          });
-      }
-      function fetchWebDirectoryFiles(path = "") {
-        fetch(`/files?path=${path}`)
-          .then((response) => response.json())
-          .then((items) => {
-            const fileList = document.getElementById("fileList");
-            fileList.innerHTML = ""; // 清空現有列表
-            items.forEach((item) => {
-              const listItem = document.createElement("li");
-              if (item.isDirectory) {
-                const link = document.createElement("a");
-                link.href = "#";
-                link.textContent = item.name;
-                link.style.color = "red"; // 根目錄下的目錄換色
-                link.onclick = () => {
-                  fetchWebDirectoryFiles(`${path}/${item.name}`);
-                  return false; // 防止默認行為
-                };
-                listItem.appendChild(link);
-              } else {
-                const link = document.createElement("a");
-                link.href = "#";
-                link.textContent = item.name;
-                link.onclick = () => {
-                  downloadFile(`${path}/${item.name}`);
-                  return false; // 防止默認行為
-                };
-                listItem.appendChild(link);
-              }
-              fileList.appendChild(listItem);
-            });
-            // 如果有子目錄，則顯示返回按鈕
-            if (path) {
-              const listItem = document.createElement("li");
-              const link = document.createElement("a");
-              link.href = "#";
-              link.textContent = "返回上層";
-              link.onclick = () => {
-                fetchWebDirectoryFiles(path.split("/").slice(0, -1).join("/"));
-                return false;
-              };
-              listItem.appendChild(link);
-              fileList.insertBefore(listItem, fileList.firstChild);
-            }
-          })
-          .catch((error) => {
-            alert("無法獲取 web 目錄檔案");
-          });
-      }
-      function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-          tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        if (evt) {
-          evt.currentTarget.className += " active";
-        }
-        document.getElementById(tabName).style.display = "block";
-      }
-      function fetchPanelData() {
-        fetch(`/panel`)
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              const infoData = document.getElementById("info-data");
-              infoData.innerHTML = generateTable(data.data);
-            } else {
-              document.getElementById(
-                `info-data`
-              ).innerText = `error: ${data.message}`;
-            }
-          })
-          .catch((error) => {
-            document.getElementById(`info-data`).innerText = `error: ${error}`;
-          });
-      }
-      function sendCommand(command) {
-        fetch("/panel", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ command: command }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              alert(`error: ${data.message}`);
-            } else {
-              alert(`success: ${data.message}`);
-            }
-          })
-          .catch((error) => {
-            alert(`error: ${error}`);
-          });
-      }
-      function generateTable(data) {
-        const units = {
-          temp: "°C",
-          power: "mW",
-          cpu: "%",
-          gpu: "%",
-          // 添加更多需要的單位
-        };
-
-        let table = "<table>";
-        for (let key in data) {
-          let unit = "";
-          // 使用部分匹配來添加單位
-          for (let unitKey in units) {
-            if (key.toLowerCase().includes(unitKey)) {
-              unit = ` ${units[unitKey]}`;
-              break;
-            }
+            openTab(null, "doc"); // 預設打開 doc
+            fetchWebDirectoryFiles();
+          } else {
+            document.getElementById("content").innerHTML = `<p>資料未找到</p>`;
           }
-          table += `<tr><th>${key}</th><td>${data[key]}${unit}</td></tr>`;
         }
-        table += "</table>";
-        return table;
-      }
-      // 處理 Tab 鍵輸入
+
+        function uploadFile() {
+          var fileInput = document.getElementById('fileInput');
+          var filename = fileInput.files[0].name;  // 從檔案選擇器中獲取檔案名稱
+          var formData = new FormData();
+
+          // 檢查是否選擇了檔案
+          if (!fileInput.files.length) {
+              alert("請選擇一個檔案");
+              return;
+          }
+
+          // 附加檔案與檔案名稱到 FormData 中
+          formData.append("content", fileInput.files[0]);  // 上傳檔案
+          formData.append("filename", filename);        // 上傳檔案名稱
+          fetch("/files", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                alert("檔案上傳成功");
+                fetchWebDirectoryFiles(); // 上傳成功後刷新文件列表
+              } else {
+                alert(`錯誤: ${data.message}`);
+              }
+            })
+            .catch((error) => {
+              alert("檔案上傳失敗");
+            });
+        }
+        function downloadFile(filename) {
+          const sanitizedFilename = filename.startsWith("/")
+            ? filename.slice(1)
+            : filename;
+          window.location.href = `/files?path=${sanitizedFilename}&download=true`;
+        }
+        function fetchFileContent() {
+          const filename = document.getElementById("fileSelect").value;
+          fetch(`/files?path=${filename}&download=false`)
+            .then((response) => response.text())
+            .then((data) => {
+              document.getElementById("fileContent").value = data;
+            })
+            .catch((error) => {
+              alert("ERROR");
+            });
+        }
+        function saveFile() {
+          let filename = document.getElementById("fileSelect").value;
+          const content = document.getElementById("fileContent").value;
+          const formData = new FormData();
+          if (filename.startsWith("home/jetson/")) {
+            filename = filename.replace("home/jetson/", "");
+          }
+          formData.append("filename", filename);
+          formData.append("content", new Blob([content], { type: "text/plain" }));
+          fetch("/files", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                alert("檔案儲存成功");
+              } else {
+                alert("儲存失敗: " + data.message);
+              }
+            })
+            .catch((error) => {
+              alert("檔案儲存失敗");
+            });
+        }
+        function fetchWebDirectoryFiles(path = "") {
+          fetch(`/files?path=${path}`)
+            .then((response) => response.json())
+            .then((items) => {
+              const fileList = document.getElementById("fileList");
+              fileList.innerHTML = ""; // 清空現有列表
+              items.forEach((item) => {
+                const listItem = document.createElement("li");
+                if (item.isDirectory) {
+                  const link = document.createElement("a");
+                  link.href = "#";
+                  link.textContent = item.name;
+                  link.style.color = "red"; // 根目錄下的目錄換色
+                  link.onclick = () => {
+                    fetchWebDirectoryFiles(`${path}/${item.name}`);
+                    return false; // 防止默認行為
+                  };
+                  listItem.appendChild(link);
+                } else {
+                  const link = document.createElement("a");
+                  link.href = "#";
+                  link.textContent = item.name;
+                  link.onclick = () => {
+                    downloadFile(`${path}/${item.name}`);
+                    return false; // 防止默認行為
+                  };
+                  listItem.appendChild(link);
+                }
+                fileList.appendChild(listItem);
+              });
+              // 如果有子目錄，則顯示返回按鈕
+              if (path) {
+                const listItem = document.createElement("li");
+                const link = document.createElement("a");
+                link.href = "#";
+                link.textContent = "返回上層";
+                link.onclick = () => {
+                  fetchWebDirectoryFiles(path.split("/").slice(0, -1).join("/"));
+                  return false;
+                };
+                listItem.appendChild(link);
+                fileList.insertBefore(listItem, fileList.firstChild);
+              }
+            })
+            .catch((error) => {
+              alert("無法獲取 web 目錄檔案");
+            });
+        }
+        function openTab(evt, tabName) {
+          var i, tabcontent, tablinks;
+          tabcontent = document.getElementsByClassName("tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+          if (evt) {
+            evt.currentTarget.className += " active";
+          }
+          document.getElementById(tabName).style.display = "block";
+        }
+        function fetchPanelData() {
+          fetch(`/panel`)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                const infoData = document.getElementById("info-data");
+                infoData.innerHTML = generateTable(data.data);
+              } else {
+                document.getElementById(
+                  `info-data`
+                ).innerText = `error: ${data.message}`;
+              }
+            })
+            .catch((error) => {
+              document.getElementById(`info-data`).innerText = `error: ${error}`;
+            });
+        }
+        function sendCommand(command) {
+          fetch("/panel", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ command: command }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status === "success") {
+                alert(`error: ${data.message}`);
+              } else {
+                alert(`success: ${data.message}`);
+              }
+            })
+            .catch((error) => {
+              alert(`error: ${error}`);
+            });
+        }
+        function generateTable(data) {
+          const units = {
+            temp: "°C",
+            power: "mW",
+            cpu: "%",
+            gpu: "%",
+            // 添加更多需要的單位
+          };
+
+          let table = "<table>";
+          for (let key in data) {
+            let unit = "";
+            // 使用部分匹配來添加單位
+            for (let unitKey in units) {
+              if (key.toLowerCase().includes(unitKey)) {
+                unit = ` ${units[unitKey]}`;
+                break;
+              }
+            }
+            table += `<tr><th>${key}</th><td>${data[key]}${unit}</td></tr>`;
+          }
+          table += "</table>";
+          return table;
+        }
+        // 處理 Tab 鍵輸入
       function handleTab(event) {
-        if (event.key === "Tab") {
-          event.preventDefault(); // 防止 Tab 切換焦點
-          var textarea = event.target;
-          var start = textarea.selectionStart;
-          var end = textarea.selectionEnd;
+          if (event.key === "Tab") {
+              event.preventDefault();  // 防止 Tab 切換焦點
+              var textarea = event.target;
+              var start = textarea.selectionStart;
+              var end = textarea.selectionEnd;
 
-          // 在選中的範圍插入制表符 (Tab)
-          textarea.value =
-            textarea.value.substring(0, start) +
-            "    " +
-            textarea.value.substring(end);
+              // 在選中的範圍插入制表符 (Tab)
+              textarea.value = textarea.value.substring(0, start) + "    " + textarea.value.substring(end);
 
-          // 將光標移動到插入的位置
-          textarea.selectionStart = textarea.selectionEnd = start + 4;
+              // 將光標移動到插入的位置
+              textarea.selectionStart = textarea.selectionEnd = start + 4;
+          }
         }
-      }
-      // 高亮顯示 Python 語法，特別是註解部分
-      function highlightSyntax() {
-        let code = document.getElementById("fileContent").innerText;
-
-        // 註解高亮處理 (Python的註解以#開頭)
-        code = code.replace(/(^|\s)(#.*)/g, function (match, p1, p2) {
-          return p1 + '<span class="comment">' + p2 + "</span>";
-        });
-
-        // 關鍵字高亮處理 (這裡示範 Python 一些關鍵字)
-        const keywords = [
-          "def",
-          "class",
-          "import",
-          "for",
-          "if",
-          "else",
-          "elif",
-          "try",
-          "except",
-          "return",
-          "lambda",
-        ];
-        keywords.forEach((keyword) => {
-          const regex = new RegExp(`\\b${keyword}\\b`, "g");
-          code = code.replace(regex, function (match) {
-            return `<span class="keyword">${match}</span>`;
-          });
-        });
-
-        // 字串高亮處理 (簡單匹配 Python 字串)
-        code = code.replace(/(["'])(?:(?=(\\?))\2.)*?\1/g, function (match) {
-          return `<span class="string">${match}</span>`;
-        });
-
-        // 將高亮後的內容插入到顯示區域
-        document.getElementById("fileContent").innerHTML = code;
-      }
-      // 自動調整textarea高度
-      function autoResizeTextarea(textarea) {
-        textarea.style.height = "auto"; // 重置高度
-        textarea.style.height = textarea.scrollHeight + "px"; // 設置為內容的高度
-      }
     </script>
   </body>
 </html>
