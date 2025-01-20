@@ -193,25 +193,32 @@
       <h1 id="welcome-message">Welcome Using this tools</h1>
       <div id="content" class="data-box">
         <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'info')">INFO</button>
-            <button class="tablinks" onclick="openTab(event, 'control')">CONTROL</button>
+          <button class="tablinks" onclick="openTab(event, 'info')">
+            INFO
+          </button>
+          <button class="tablinks" onclick="openTab(event, 'control')">
+            CONTROL
+          </button>
         </div>
         <div id="info" class="tabcontent">
-            <h3>Jetson Orin Nano 資訊</h3>
-            <div id="info-data">載入中...</div>
+          <h3>Jetson Orin Nano 資訊</h3>
+          <div id="info-data">載入中...</div>
         </div>
-        <div id ="control" class="tabcontent">
-            <h3>控制面板</h3>
-              <button onclick="sendCommand('shutdown')">關機</button>
-              <button onclick="sendCommand('reboot')">重啟</button>
-              <button onclick="sendCommand('restart_web_service')">重啟web服務</button>
-              <button onclick="sendCommand('restart_maind_service')">重起maind服務</button>
-          </div>
+        <div id="control" class="tabcontent">
+          <h3>控制面板</h3>
+          <button onclick="sendCommand('shutdown')">關機</button>
+          <button onclick="sendCommand('reboot')">重啟</button>
+          <button onclick="sendCommand('restart_web_service')">
+            重啟web服務
+          </button>
+          <button onclick="sendCommand('restart_maind_service')">
+            重起maind服務
+          </button>
+        </div>
       </div>
     </div>
 
     <script>
-
       // 設置事件監聽器
       document.getElementById("Panel").addEventListener("click", function () {
         loadContent("Panel");
@@ -345,9 +352,11 @@
       }
       function saveFile() {
         const filename = document.getElementById("fileSelect").value;
-        filename.slice(12);
         const content = document.getElementById("fileContent").value;
         const formData = new FormData();
+        if (filename.startsWith("home/jetson/")) {
+          filename = filename.replace("home/jetson/", "");
+        }
         formData.append("filename", filename);
         formData.append("content", new Blob([content], { type: "text/plain" }));
         fetch("/files", {
@@ -357,10 +366,10 @@
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "success") {
-            alert("檔案儲存成功");
-        } else {
-            alert("儲存失敗: " + data.message);
-        }
+              alert("檔案儲存成功");
+            } else {
+              alert("儲存失敗: " + data.message);
+            }
           })
           .catch((error) => {
             alert("檔案儲存失敗");
