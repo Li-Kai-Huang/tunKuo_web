@@ -303,7 +303,7 @@
                                     <option value="home/jetson/main.py">main.py</option>
                                     <option value="home/jetson/main.sh">main.sh</option>
                                 </select>
-                                <textarea id="fileContent" rows="10" cols="80" onkeydown="handleTab(event)" ></textarea>
+                                <textarea id="fileContent" rows="100" cols="50" onkeydown="handleTab(event)" ></textarea>
                                 <button type="button" onclick="saveFile()">存檔</button>
                             </div>
                         `;
@@ -520,7 +520,7 @@
               var end = textarea.selectionEnd;
 
               // 在選中的範圍插入制表符 (Tab)
-              textarea.value = textarea.value.substring(0, start) + "\t" + textarea.value.substring(end);
+              textarea.value = textarea.value.substring(0, start) + "    " + textarea.value.substring(end);
 
               // 將光標移動到插入的位置
               textarea.selectionStart = textarea.selectionEnd = start + 1;
