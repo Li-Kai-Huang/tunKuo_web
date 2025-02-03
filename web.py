@@ -155,7 +155,23 @@ def cameras():
             if command == 'replace':
                 subprocess.run(['sudo', 'cp', CONFIG_DEFAULT_PATH, CONFIG_PATH])
                 return jsonify({"status": "success", "message": "replaced config"}), 200
-            
+                
+            if command == 'setting':
+
+                content_file = request.files['content']
+
+                if not content_file:
+                    return jsonify({"status": "error", "message": "缺少檔案內容"}), 400
+    
+                # 儲存檔案內容
+                try:
+                    with open(CONFIG_PATH, 'wb') as f:
+                        f.write(content_file.read())  # 儲存傳送的檔案內容
+    
+                    return jsonify({"status": "success", "message": f"檔案 {filename} 儲存成功"}), 200
+                except Exception as e:
+                    return jsonify({"status": "error", "message": str(e)}), 500
+                    
             else:
                     return jsonify({"status": "error", "message": "Unknown command"}), 400
         except Exception as e:
