@@ -122,6 +122,16 @@ def panel():
 
 @app.route('/cameras', methods=['GET', 'POST'])
 def cameras():
+    if request.method == 'GET':
+        try:
+            return app.response_class(
+                    response=json.dumps({"status": "success", "data": get_info()}, indent=4, sort_keys=True, default=str),
+                    status=200,
+                    mimetype='application/json'
+                )
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)})
+
     if request.method == 'POST':
         return
 
