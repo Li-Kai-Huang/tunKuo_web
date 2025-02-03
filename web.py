@@ -14,6 +14,8 @@ app = Flask(__name__)
 # File paths
 MAIN_PY_PATH = '/home/jetson/main.py'
 MAIN_SH_PATH = '/home/jetson/main.sh'
+CONFIG_DEFAULT_PATH = '/opt/default_config.json'
+CONFIG_PATH = '/opt/config.json'
 WEB_HTML_PATH = 'web.html'
 DOWNLOAD_FOLDER = '/'  # 替換為你想要保存文件的目錄
 UPLOAD_FOLDER = '/home/jetson'
@@ -22,6 +24,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Initialize the camera
 cap = cv2.VideoCapture(0)
+
+
 
 @app.before_request
 def enforce_http():
@@ -124,17 +128,39 @@ def panel():
 def cameras():
     if request.method == 'GET':
         try:
-            return app.response_class(
-                    response=json.dumps({"status": "success", "data": get_info()}, indent=4, sort_keys=True, default=str),
-                    status=200,
-                    mimetype='application/json'
-                )
+            type = request.args.get('type', ' ').strip().lower()
+            if type == 'config':
+                with open(CONFIG_PATH, 'r') as config:
+                    return app.response_class(
+                            response=config,
+                            status=200,
+                            mimetype='application/json'
+                        )
+                    
+            elif type == 'cameras':
+                pass
+                
+            else:
+                return jsonify({"status": "error", "message": "Unknown command"}), 400
         except Exception as e:
             return jsonify({"status": "error", "message": str(e)})
 
     if request.method == 'POST':
-        return
 
+        try:
+            data = request.get_json()
+    
+            command = data.get('command', '').lower()
+    
+            if command == 'replace':
+                subprocess.run(['sudo', 'cp', CONFIG_DEFAULT_PATH, CONFIG_PATH])
+                return jsonify({"status": "success", "message": "replaced config"}), 200
+            
+            else:
+                    return jsonify({"status": "error", "message": "Unknown command"}), 400
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
+        
 @app.route('/files', methods=['GET', 'POST'])
 def files():
     if request.method == 'POST':
