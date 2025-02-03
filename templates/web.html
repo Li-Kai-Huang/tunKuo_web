@@ -478,8 +478,8 @@
           })
             .then((response) => response.json())
             .then((data) => {
-              if (data.status === "success") {
-                alert(`error: ${data.message}`);
+              if (data.status) {
+                alert(`succes: ${data.message}`);
               } else {
                 alert(`success: ${data.message}`);
               }
