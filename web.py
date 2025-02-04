@@ -110,20 +110,19 @@ def panel():
 def cameras():
     if request.method == 'GET':
         try:
-            type = request.args.get('type', ' ').strip().lower()
-            if type == 'config':
+            command = request.args.get('command', ' ').strip().lower()
+            
+            if command == 'config':
+                
                 config = load_settings(CONFIG_PATH)
-                for key in config.keys():
-                    if config[key]["enabled"]:
-                        if len(config[key]["settings"].keys()) == 0:
-                            config[key]["settings"].update(get_camera_settings(config[key]["path"]))
+                
                 return app.response_class(
-                        response=config,
+                        response=json.dumps({"status": "success", "data": config}, indent=4, sort_keys=True, default=str),
                         status=200,
                         mimetype='application/json'
                     )
 
-            elif type == 'cameras':
+            elif command == 'cameras':
                 pass
 
             else:
@@ -271,23 +270,20 @@ def load_settings(filename):
             return json.load(f)
     return None
 
-def apply_camera_settings(device, settings):
-    """ 使用 v4l2-ctl 套用 JSON 內的相機設定 """
-    for key, value in settings.items():
-        if "value" in value:
-            run(["v4l2-ctl", "-d", device, "--set-ctrl", key, '=', value['value']])
-            print(f"[INFO] 套用設定 {key} = {value['value']}")
 
 def start_CameraServer(config):
     """ 啟動 cscore 影像串流 """
-
-    for camera in config:
-        if camera["enabled"]:
-            apply_camera_settings(camera["path"], camera["settings"])
-            cs = CameraServer.startAutomaticCapture(name=camera["name"], path=camera["path"])
-            cs.setResolution(*camera["resolution"])
-            cs.setFPS(camera["FPS"])
-            cs.setExposureManual(camera["exposure"])
+    print(f"[Info] 啟動 CS with {config}")
+    for key in config.keys():
+        if config[key]["enabled"]:
+            
+            print(f"[INFO] Camera enabled {config[key]}")
+            cs = CameraServer.startAutomaticCapture(name=config[key]["name"], path=config[key]["path"])
+            if len(config[key]["settings"].keys()) == 0:
+                config[key]["settings"].update(json.loads(cs.getConfigJson()))
+                save_settings(config, CONFIG_PATH)
+                
+            cs.setConfigJson(config[key]["settings"])
 
 #====================================
 #=============== MAIN ===============
@@ -299,10 +295,9 @@ if __name__ == '__main__':
         if config is None:
             print("[Error] 無法取得相機設定")
         else:
-            print("[Info] 啟動 CS")
             start_CameraServer(config)
     except Exception as e:
-        print(f"[Error] CS 啟動失敗 : {e}")
+        print(f"[Error] CS 啟動失敗 : {str(e)}")
 
     # Start the Flask application
     updataT = threading.Thread(target=info_update)
