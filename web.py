@@ -123,7 +123,7 @@ def cameras():
                     )
 
             elif command == 'cameras':
-                pass
+                return jsonify({"status": "error", "message": "Unknown command"}), 400
 
             else:
                 return jsonify({"status": "error", "message": "Unknown command"}), 400
@@ -150,7 +150,8 @@ def cameras():
 
                 # 儲存檔案內容
                 try:
-                    save_settings(CONFIG_PATH, content_file.read())
+                    with open(CONFIG_PATH, 'wb') as f:
+                        f.write(content_file.read())  # 儲存傳送的檔案內容
 
                     return jsonify({"status": "success", "message": f"檔案儲存成功"}), 200
                 except Exception as e:
