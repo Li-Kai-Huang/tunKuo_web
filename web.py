@@ -68,6 +68,11 @@ def info_update():
 def index():
     return render_template(WEB_HTML_PATH)
 
+@app.route('/favicon.png')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'templates/favicon.png', mimetype='image/png')
+
 @app.route('/panel', methods=['GET', 'POST'])
 def panel():
     if request.method == 'GET':
@@ -143,15 +148,15 @@ def cameras():
 
             if command == 'setting':
 
-                content_file = request.files['content']
+                data = data.get('data', '').lower()
 
-                if not content_file:
+                if not data:
                     return jsonify({"status": "error", "message": "缺少檔案內容"}), 400
 
                 # 儲存檔案內容
                 try:
                     with open(CONFIG_PATH, 'wb') as f:
-                        f.write(content_file.read())  # 儲存傳送的檔案內容
+                        f.write(data)  # 儲存傳送的檔案內容
 
                     return jsonify({"status": "success", "message": f"檔案儲存成功"}), 200
                 except Exception as e:
