@@ -325,32 +325,32 @@
           fetchCameraSettings();
           document.getElementById("content").innerHTML = `
                                         <div class="tab">
-                                <button class="tablinks" onclick="openTab(event, 'Camera1')">Camera 1</button>
-                                <button class="tablinks" onclick="openTab(event, 'Camera2')">Camera 2</button>
-                                <button class="tablinks" onclick="openTab(event, 'Camera3')">Camera 3</button>
+                                <button class="tablinks" onclick="openTab(event, '1')">Camera 1</button>
+                                <button class="tablinks" onclick="openTab(event, '2')">Camera 2</button>
+                                <button class="tablinks" onclick="openTab(event, '3')">Camera 3</button>
                             </div>
-                            <div id="Camera1" class="tabcontent">
+                            <div id="1" class="tabcontent">
                                 <h3>Camera 1</h3>
                                 <label class="switch">
-                                  <input type="checkbox" id="camera1Toggle" onchange="toggleCamera('camera1')">
+                                  <input type="checkbox" id="camera1Toggle" onchange="toggleCamera('1')">
                                   <span class="slider round"></span>
                                 </label>
                                 <img src="/video_feed/camera1" alt="Camera 1">
                                 <table id="camera1SettingsTable"></table>
                             </div>
-                            <div id="Camera2" class="tabcontent">
+                            <div id="2" class="tabcontent">
                               <h3>Camera 2</h3>
                                 <label class="switch">
-                                  <input type="checkbox" id="camera2Toggle" onchange="toggleCamera('camera2')">
+                                  <input type="checkbox" id="camera2Toggle" onchange="toggleCamera('2')">
                                   <span class="slider round"></span>
                                 </label>
                                 <img src="/video_feed/camera2" alt="Camera 2">
                                 <table id="camera2SettingsTable"></table>
                             </div>
-                            <div id="Camera3" class="tabcontent">
+                            <div id="3" class="tabcontent">
                                 <h3>Camera 3</h3>
                                 <label class="switch">
-                                  <input type="checkbox" id="camera3Toggle" onchange="toggleCamera('camera3')">
+                                  <input type="checkbox" id="camera3Toggle" onchange="toggleCamera('3')">
                                   <span class="slider round"></span>
                                 </label>
                                 <img src="/video_feed/camera3" alt="Camera 3">
@@ -359,7 +359,7 @@
                             <button class="info" onclick="saveSetting()">save Setting</button>
                             <button class="warn" onclick="resetSetting()">reset Setting</button>
                         `;
-          openTab(null, "Camera1"); // 預設打開 Camera1
+          openTab(null, "1"); // 預設打開 1
         } else if (option === "Files") {
           document.getElementById("content").innerHTML = `
                             <div class="tab">
@@ -647,19 +647,19 @@
           }
           table.innerHTML = `
                 <tr>
-                    <td>Enabled</td>
+                    <td>enabled</td>
                     <td><input type="checkbox" ${
                       camera.enabled ? "checked" : ""
                     } onchange="updateSetting('${cameraId}', 'enabled', this.checked)"></td>
                 </tr>
                 <tr>
-                    <td>Name</td>
+                    <td>name</td>
                     <td><input type="text" value="${
                       camera.name
                     }" onchange="updateSetting('${cameraId}', 'name', this.value)"></td>
                 </tr>
                 <tr>
-                    <td>Path</td>
+                    <td>path</td>
                     <td><input type="text" value="${
                       camera.path
                     }" onchange="updateSetting('${cameraId}', 'path', this.value)"></td>
@@ -700,7 +700,7 @@
       }
       function saveSetting() {
         const settings = {};
-        const cameraIds = ["Camera1", "Camera2", "Camera3"];
+        const cameraIds = ["1", "2", "3"];
 
         cameraIds.forEach((cameraId) => {
           const cameraSettings = {};
@@ -734,17 +734,37 @@
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "success") {
-              alert("設定已成功保存");
+              alert("saving successful");
             } else {
-              alert("保存設定失敗: " + data.message);
+              alert("saving failed: " + data.message);
             }
           })
           .catch((error) => {
-            alert("保存設定失敗");
+            alert("saving error: " + error);
           });
       }
 
-      function resetSetting() {}
+      function resetSetting() {
+        fetch("/cameras", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ command: "replace" }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              alert("success");
+            } else {
+              alert("failed: " + data.message);
+            }
+          })
+          .catch((error) => {
+            alert("error: "+ error);
+          });
+
+      }
 
       document.addEventListener("DOMContentLoaded", function () {
         fetchCameraSettings();

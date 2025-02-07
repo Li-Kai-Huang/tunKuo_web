@@ -148,15 +148,14 @@ def cameras():
 
             if command == 'setting':
 
-                data = data.get('data', '').lower()
+                data = data.get('data', '')
 
                 if not data:
                     return jsonify({"status": "error", "message": "缺少檔案內容"}), 400
 
                 # 儲存檔案內容
                 try:
-                    with open(CONFIG_PATH, 'wb') as f:
-                        f.write(data)  # 儲存傳送的檔案內容
+                    save_settings(data, CONFIG_PATH)
 
                     return jsonify({"status": "success", "message": f"檔案儲存成功"}), 200
                 except Exception as e:
