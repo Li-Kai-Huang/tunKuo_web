@@ -10,7 +10,7 @@ import threading
 import cv2
 from jtop import jtop
 from time import sleep
-from cscore import CameraServer
+from cscore import CameraServer, UsbCamera
 from ntcore import NetworkTableInstance
 import json
 import os
@@ -283,12 +283,24 @@ def start_CameraServer(config):
         if config[key]["enabled"]:
             
             print(f"[INFO] Camera enabled {config[key]}")
-            cs = CameraServer.startAutomaticCapture(name=config[key]["name"], path=config[key]["path"])
-            if len(config[key]["settings"].keys()) == 0:
-                config[key]["settings"].update(json.loads(cs.getConfigJson()))
-                save_settings(config, CONFIG_PATH)
-                
-            cs.setConfigJson(config[key]["settings"])
+            try:
+              ntinst = NetworkTableInstance.getDefault()
+              ntinst.startClient4("jetson")
+              ntinst.setServerTeam(7632)
+              ntinst.setServer("host", NetworkTableInstance.kDefaultPort4)
+              usbcam = UsbCamera(name=config[key]["name"], path=config[key]["path"])
+  
+              if not("settings" in config[key].keys()) or len(config[key]["settings"].keys()) == 0:
+                  config[key].update({"settings":json.loads(cs.getConfigJson())})
+                  save_settings(config, CONFIG_PATH)
+                  print("[INFO] enabled camera config auto loaded.")
+                  
+              usbcam.setConfigJson(config[key]["settings"])
+              
+              CameraServer.addCamera(usbcam)
+              
+            except Exception as e:
+              print(f"[ERROR] {e}")
 
 #====================================
 #=============== MAIN ===============
@@ -308,3 +320,4 @@ if __name__ == '__main__':
     updataT = threading.Thread(target=info_update)
     updataT.start()
     app.run(host='0.0.0.0', port=5801, threaded=True)
+
