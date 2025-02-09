@@ -6,6 +6,7 @@
     <title>7632web</title>
     <link rel="icon" href="/favicon.png" type="image/png" />
     <style>
+      /* Global Layout */
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -13,7 +14,6 @@
         display: flex;
         background-color: #f0f0f0;
       }
-
       .sidebar {
         width: 200px;
         background-color: #333;
@@ -22,16 +22,13 @@
         padding: 20px;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
       }
-
       .sidebar ul {
-        list-style-type: none;
+        list-style: none;
         padding: 0;
       }
-
       .sidebar ul li {
         margin: 20px 0;
       }
-
       .sidebar ul li button {
         width: 100%;
         padding: 10px;
@@ -43,29 +40,24 @@
         text-align: left;
         transition: background-color 0.3s;
       }
-
       .sidebar ul li button:hover {
         background-color: #555;
       }
-
       .main-content {
         flex-grow: 1;
-        padding: 0;
         background-color: #fff;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         margin: 20px;
         border-radius: 8px;
         overflow: hidden;
       }
-
       .main-content h1 {
-        margin-top: 0;
-        color: #333;
+        margin: 0;
         padding: 20px;
         background-color: #f4f4f4;
         border-bottom: 1px solid #ccc;
+        color: #333;
       }
-
       .data-box {
         background-color: #f9f9f9;
         padding: 20px;
@@ -73,13 +65,13 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
 
+      /* Tabs & Table */
       .tab {
         overflow: hidden;
         border-bottom: 1px solid #ccc;
         background-color: #007bff;
         margin-bottom: 0;
       }
-
       .tab button {
         background-color: inherit;
         float: left;
@@ -91,30 +83,38 @@
         font-size: 16px;
         color: white;
       }
-
       .tab button:hover {
         background-color: #0056b3;
       }
-
       .tab button.active {
         background-color: #0056b3;
       }
-
       .tabcontent {
         display: none;
         padding: 20px;
         border-top: none;
         background-color: #fff;
       }
-
-      textarea {
+      table {
         width: 100%;
-        padding: 10px;
-        border-radius: 4px;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      table,
+      th,
+      td {
         border: 1px solid #ccc;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: left;
+      }
+      th {
+        background-color: #f4f4f4;
       }
 
+      /* Buttons */
       button {
         padding: 4px 20px;
         border: none;
@@ -124,41 +124,34 @@
         cursor: pointer;
         transition: background-color 0.3s;
       }
-
       button.info {
         background-color: #338cf1;
       }
-
       button.warn {
         background-color: #e58a1a;
       }
-
       button.danger {
         background-color: #e51010;
         cursor: not-allowed;
       }
-
       button:hover {
         background-color: #218838;
       }
-
       button.info:hover {
         background-color: #04688f;
       }
-
       button.warn:hover {
         background-color: #bb4b00;
       }
-
       button.danger:hover {
         background-color: #970202;
       }
 
+      /* File List & Form */
       .file-list {
-        list-style-type: none;
+        list-style: none;
         padding: 0;
       }
-
       .file-list li {
         margin: 10px 0;
         padding: 10px;
@@ -167,56 +160,39 @@
         border-radius: 4px;
         transition: background-color 0.3s;
       }
-
       .file-list li a {
         text-decoration: none;
         color: #007bff;
         font-weight: bold;
       }
-
       .file-list li a:hover {
         text-decoration: underline;
       }
-
       .file-list li:hover {
         background-color: #e9e9e9;
       }
 
-      table {
+      /* Textarea */
+      textarea {
         width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-      }
-
-      table,
-      th,
-      td {
-        border: 1px solid #ccc;
-      }
-
-      th,
-      td {
         padding: 10px;
-        text-align: left;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
       }
 
-      th {
-        background-color: #f4f4f4;
-      }
-
+      /* Toggle Switch */
       .switch {
         position: relative;
         display: inline-block;
         width: 60px;
         height: 34px;
       }
-
       .switch input {
         opacity: 0;
         width: 0;
         height: 0;
       }
-
       .slider {
         position: absolute;
         cursor: pointer;
@@ -225,10 +201,8 @@
         right: 0;
         bottom: 0;
         background-color: #ccc;
-        -webkit-transition: 0.4s;
         transition: 0.4s;
       }
-
       .slider:before {
         position: absolute;
         content: "";
@@ -237,177 +211,269 @@
         left: 4px;
         bottom: 4px;
         background-color: white;
-        -webkit-transition: 0.4s;
         transition: 0.4s;
       }
-
       input:checked + .slider {
         background-color: #2196f3;
       }
-
       input:focus + .slider {
         box-shadow: 0 0 1px #2196f3;
       }
-
       input:checked + .slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
         transform: translateX(26px);
       }
-
-      /* Rounded sliders */
       .slider.round {
         border-radius: 34px;
       }
-
       .slider.round:before {
         border-radius: 50%;
       }
     </style>
   </head>
-
   <body>
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
       <ul>
-        <li><button id="Panel">Panel</button></li>
-        <li><button id="Cameras">Cameras</button></li>
-        <li><button id="Files">Files</button></li>
+        <li><button id="PanelBtn">Panel</button></li>
+        <li><button id="CamerasBtn">Cameras</button></li>
+        <li><button id="FilesBtn">Files</button></li>
       </ul>
     </div>
 
+    <!-- Main Content -->
     <div class="main-content">
       <h1 id="welcome-message">Welcome Using this tools</h1>
       <div id="content" class="data-box"></div>
     </div>
 
     <script>
-      // ≥]∏m®∆•Û∫ ≈•æπ
-      document.getElementById("Panel").addEventListener("click", function () {
-        loadContent("Panel");
-      });
+      /* ========================
+         Utility Functions
+         ======================== */
+      const openTab = (evt, tabName) => {
+        const tabcontents = document.getElementsByClassName("tabcontent");
+        for (const tab of tabcontents) {
+          tab.style.display = "none";
+        }
+        const tablinks = document.getElementsByClassName("tablinks");
+        for (const link of tablinks) {
+          link.classList.remove("active");
+        }
+        if (evt) evt.currentTarget.classList.add("active");
+        const tabElement = document.getElementById(tabName);
+        if (tabElement) tabElement.style.display = "block";
+      };
 
-      document.getElementById("Cameras").addEventListener("click", function () {
-        loadContent("Cameras");
-      });
+      // Handle Tab key in textarea for indentation
+      const handleTab = (event) => {
+        if (event.key === "Tab") {
+          event.preventDefault();
+          const textarea = event.target;
+          const start = textarea.selectionStart;
+          const end = textarea.selectionEnd;
+          textarea.value =
+            textarea.value.substring(0, start) +
+            "    " +
+            textarea.value.substring(end);
+          textarea.selectionStart = textarea.selectionEnd = start + 4;
+        }
+      };
 
-      document.getElementById("Files").addEventListener("click", function () {
-        loadContent("Files");
-      });
-      let updateInterval;
-      // Æ⁄æ⁄øÔ∂µ∏¸§J§∫Æe
-      function loadContent(option) {
+      // Dummy syntax highlighter (to be implemented as needed)
+      const highlightSyntax = () => {};
+
+      /* ========================
+         Sidebar & Content Loading
+         ======================== */
+      // Attach sidebar event listeners
+      document.getElementById("PanelBtn").addEventListener("click", () =>
+        loadContent("Panel")
+      );
+      document.getElementById("CamerasBtn").addEventListener("click", () =>
+        loadContent("Cameras")
+      );
+      document.getElementById("FilesBtn").addEventListener("click", () =>
+        loadContent("Files")
+      );
+
+      let updateInterval = null; // For periodic panel updates
+
+      const loadContent = (option) => {
+        // Hide the welcome message once content loads
         document.getElementById("welcome-message").style.display = "none";
+
         if (option === "Panel") {
           document.getElementById("content").innerHTML = `
-                            <div class="tab">
-                                <button class="tablinks" onclick="openTab(event, 'info')">INFO</button>
-                                <button class="tablinks" onclick="openTab(event, 'control')">CONTROL</button>
-                            </div>
-                            <div id="info" class="tabcontent">
-                                <h3>Jetson Orin Nano ∏Í∞T</h3>
-                                <div id="info-data">∏¸§J§§...</div>
-                            </div>
-                            <div id ="control" class="tabcontent">
-                                <h3>±±®Ó≠±™O</h3>
-                                  <button class="danger" onclick="sendCommand('shutdown')">√ˆæ˜</button>
-                                  <button class="danger" onclick="sendCommand('reboot')">≠´±“</button>
-                                  <button class="warn" onclick="sendCommand('restart_web_service')">≠´±“web™A∞»</button>
-                                  <button class="warn" onclick="sendCommand('restart_maind_service')">≠´∞_maind™A∞»</button>
-                              </div>
-                        `;
+            <div class="tab">
+              <button class="tablinks" onclick="openTab(event, 'info')">INFO</button>
+              <button class="tablinks" onclick="openTab(event, 'control')">CONTROL</button>
+            </div>
+            <div id="info" class="tabcontent">
+              <h3>Jetson Orin Nano Ë≥áË®ä</h3>
+              <div id="info-data">ËºâÂÖ•‰∏≠...</div>
+            </div>
+            <div id="control" class="tabcontent">
+              <h3>ÊéßÂà∂Èù¢Êùø</h3>
+              <button class="danger" onclick="sendCommand('shutdown')">ÈóúÊ©ü</button>
+              <button class="danger" onclick="sendCommand('reboot')">ÈáçÂïü</button>
+              <button class="warn" onclick="sendCommand('restart_web_service')">ÈáçÂïü web ÊúçÂãô</button>
+              <button class="warn" onclick="sendCommand('restart_maind_service')">ÈáçÂïü maind ÊúçÂãô</button>
+            </div>
+          `;
           openTab(null, "info");
           fetchPanelData();
-          if (updateInterval) {
-            clearInterval(updateInterval);
-          }
-          updateInterval = setInterval(fetchPanelData, 500); // ®C5¨ÌßÛ∑s§@¶∏
+          if (updateInterval) clearInterval(updateInterval);
+          updateInterval = setInterval(fetchPanelData, 500); // Update every 0.5 seconds
         } else if (option === "Cameras") {
           fetchCameraSettings();
           document.getElementById("content").innerHTML = `
-                                        <div class="tab">
-                                <button class="tablinks" onclick="openTab(event, '1')">Camera 1</button>
-                                <button class="tablinks" onclick="openTab(event, '2')">Camera 2</button>
-                                <button class="tablinks" onclick="openTab(event, '3')">Camera 3</button>
-                            </div>
-                            <div id="1" class="tabcontent">
-                                <h3>Camera 1</h3>
-                                <label class="switch">
-                                  <input type="checkbox" id="camera1Toggle" onchange="toggleCamera('1')">
-                                  <span class="slider round"></span>
-                                </label>
-                                <img src="/video_feed/camera1" alt="Camera 1">
-                                <table id="camera1SettingsTable"></table>
-                            </div>
-                            <div id="2" class="tabcontent">
-                              <h3>Camera 2</h3>
-                                <label class="switch">
-                                  <input type="checkbox" id="camera2Toggle" onchange="toggleCamera('2')">
-                                  <span class="slider round"></span>
-                                </label>
-                                <img src="/video_feed/camera2" alt="Camera 2">
-                                <table id="camera2SettingsTable"></table>
-                            </div>
-                            <div id="3" class="tabcontent">
-                                <h3>Camera 3</h3>
-                                <label class="switch">
-                                  <input type="checkbox" id="camera3Toggle" onchange="toggleCamera('3')">
-                                  <span class="slider round"></span>
-                                </label>
-                                <img src="/video_feed/camera3" alt="Camera 3">
-                                <table id="camera3SettingsTable"></table>
-                            </div>
-                            <button class="info" onclick="saveSetting()">save Setting</button>
-                            <button class="warn" onclick="resetSetting()">reset Setting</button>
-                        `;
-          openTab(null, "1"); // πw≥]•¥∂} 1
+            <div class="tab">
+              <button class="tablinks" onclick="openTab(event, 'cam1')">Camera 1</button>
+              <button class="tablinks" onclick="openTab(event, 'cam2')">Camera 2</button>
+              <button class="tablinks" onclick="openTab(event, 'cam3')">Camera 3</button>
+            </div>
+            <div id="cam1" class="tabcontent">
+              <h3>Camera 1</h3>
+              <label class="switch">
+                <input type="checkbox" id="camera1Toggle" onchange="toggleCamera('1')">
+                <span class="slider round"></span>
+              </label>
+              <img src="/video_feed/camera1" alt="Camera 1">
+              <table id="camera1SettingsTable"></table>
+            </div>
+            <div id="cam2" class="tabcontent">
+              <h3>Camera 2</h3>
+              <label class="switch">
+                <input type="checkbox" id="camera2Toggle" onchange="toggleCamera('2')">
+                <span class="slider round"></span>
+              </label>
+              <img src="/video_feed/camera2" alt="Camera 2">
+              <table id="camera2SettingsTable"></table>
+            </div>
+            <div id="cam3" class="tabcontent">
+              <h3>Camera 3</h3>
+              <label class="switch">
+                <input type="checkbox" id="camera3Toggle" onchange="toggleCamera('3')">
+                <span class="slider round"></span>
+              </label>
+              <img src="/video_feed/camera3" alt="Camera 3">
+              <table id="camera3SettingsTable"></table>
+            </div>
+            <button class="info" onclick="saveSetting()">Save Setting</button>
+            <button class="warn" onclick="resetSetting()">Reset Setting</button>
+          `;
+          openTab(null, "cam1");
         } else if (option === "Files") {
           document.getElementById("content").innerHTML = `
-                            <div class="tab">
-                                <button class="tablinks" onclick="openTab(event, 'doc')">doc</button>
-                                <button class="tablinks" onclick="openTab(event, 'edition')">edition</button>
-                            </div>
-                            <div id="doc" class="tabcontent">
-                                <h2>¿…Æ◊§W∂«/§U∏¸</h2>
-                                <form id="uploadForm" enctype="multipart/form-data">
-                                    <input type="file" id="fileInput" name="file">
-                                    <button type="button" onclick="uploadFile()">§W∂«</button>
-                                </form>
-                                <button onclick="downloadFile('/home/jetson/main.py')">§U∏¸ main.py</button>
-                                <button onclick="downloadFile('/home/jetson/main.sh')">§U∏¸ main.sh</button>
-                                <h2>web •ÿø˝¿…Æ◊</h2>
-                                <ul id="fileList" class="file-list"></ul>
-                            </div>
-                            <div id="edition" class="tabcontent">
-                                <h2>ΩsøË¿…Æ◊§∫Æe</h2>
-                                <select id="fileSelect" onchange="fetchFileContent()">
-                                    <option value="home/jetson/main.py">main.py</option>
-                                    <option value="home/jetson/main.sh">main.sh</option>
-                                </select>
-                                <textarea id="fileContent" rows="20" cols="50" onkeydown="handleTab(event)" oninput="highlightSyntax()"></textarea>
-                                <button type="button" onclick="saveFile()">¶s¿…</button>
-                            </div>
-                        `;
-          openTab(null, "doc"); // πw≥]•¥∂} doc
+            <div class="tab">
+              <button class="tablinks" onclick="openTab(event, 'doc')">doc</button>
+              <button class="tablinks" onclick="openTab(event, 'edition')">edition</button>
+            </div>
+            <div id="doc" class="tabcontent">
+              <h2>Ê™îÊ°à‰∏äÂÇ≥/‰∏ãËºâ</h2>
+              <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="file">
+                <button type="button" onclick="uploadFile()">‰∏äÂÇ≥</button>
+              </form>
+              <button onclick="downloadFile('/home/jetson/main.py')">‰∏ãËºâ main.py</button>
+              <button onclick="downloadFile('/home/jetson/main.sh')">‰∏ãËºâ main.sh</button>
+              <h2>web ÁõÆÈåÑÊ™îÊ°à</h2>
+              <ul id="fileList" class="file-list"></ul>
+            </div>
+            <div id="edition" class="tabcontent">
+              <h2>Á∑®ËºØÊ™îÊ°àÂÖßÂÆπ</h2>
+              <select id="fileSelect" onchange="fetchFileContent()">
+                <option value="home/jetson/main.py">main.py</option>
+                <option value="home/jetson/main.sh">main.sh</option>
+              </select>
+              <textarea id="fileContent" rows="20" cols="50" onkeydown="handleTab(event)" oninput="highlightSyntax()"></textarea>
+              <button type="button" onclick="saveFile()">Â≠òÊ™î</button>
+            </div>
+          `;
+          openTab(null, "doc");
           fetchWebDirectoryFiles();
         } else {
-          document.getElementById("content").innerHTML = `<p>∏ÍÆ∆•ºß‰®Ï</p>`;
+          document.getElementById("content").innerHTML = `<p>Ë≥áÊñôÊú™ÊâæÂà∞</p>`;
         }
-      }
+      };
 
-      function uploadFile() {
-        var fileInput = document.getElementById("fileInput");
-        var filename = fileInput.files[0].name; // ±q¿…Æ◊øÔæ‹æπ§§¿Ú®˙¿…Æ◊¶W∫Ÿ
-        var formData = new FormData();
+      /* ========================
+         Panel Functions
+         ======================== */
+      const fetchPanelData = () => {
+        const infoData = document.getElementById("info-data");
+        if (!infoData) return;
+        fetch(`/panel`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              infoData.innerHTML = generateTable(data.data);
+            } else {
+              infoData.innerText = `error: ${data.message}`;
+            }
+          })
+          .catch((error) => {
+            infoData.innerText = `error: ${error}`;
+          });
+      };
 
-        // ¿À¨d¨Oß_øÔæ‹§F¿…Æ◊
+      const sendCommand = (command) => {
+        fetch("/panel", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ command: command }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              alert(`Success: ${data.message}`);
+            } else {
+              alert(`Error: ${data.message}`);
+            }
+          })
+          .catch((error) => {
+            alert(`Error: ${error}`);
+          });
+      };
+
+      const generateTable = (data) => {
+        const units = {
+          temp: "¬∞C",
+          power: "mW",
+          cpu: "%",
+          gpu: "%",
+          fan: "%",
+          ram: "%",
+          swap: "%",
+        };
+        let tableHTML = "<table>";
+        for (const key in data) {
+          let unit = "";
+          for (const unitKey in units) {
+            if (key.toLowerCase().includes(unitKey)) {
+              unit = ` ${units[unitKey]}`;
+              break;
+            }
+          }
+          tableHTML += `<tr><th>${key}</th><td>${data[key]}${unit}</td></tr>`;
+        }
+        tableHTML += "</table>";
+        return tableHTML;
+      };
+
+      /* ========================
+         Files Functions
+         ======================== */
+      const uploadFile = () => {
+        const fileInput = document.getElementById("fileInput");
         if (!fileInput.files.length) {
-          alert("Ω–øÔæ‹§@≠”¿…Æ◊");
+          alert("Ë´ãÈÅ∏Êìá‰∏ÄÂÄãÊ™îÊ°à");
           return;
         }
-
-        // ™˛•[¿…Æ◊ªP¿…Æ◊¶W∫Ÿ®Ï FormData §§
-        formData.append("content", fileInput.files[0]); // §W∂«¿…Æ◊
-        formData.append("filename", filename); // §W∂«¿…Æ◊¶W∫Ÿ
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append("content", file);
+        formData.append("filename", file.name);
         fetch("/files", {
           method: "POST",
           body: formData,
@@ -415,34 +481,37 @@
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "success") {
-              alert("¿…Æ◊§W∂«¶®•\");
-              fetchWebDirectoryFiles(); // §W∂«¶®•\´·®Í∑s§Â•Û¶C™Ì
+              alert("Ê™îÊ°à‰∏äÂÇ≥ÊàêÂäü");
+              fetchWebDirectoryFiles();
             } else {
-              alert(`ø˘ª~: ${data.message}`);
+              alert(`ÈåØË™§: ${data.message}`);
             }
           })
-          .catch((error) => {
-            alert("¿…Æ◊§W∂«•¢±—");
+          .catch(() => {
+            alert("Ê™îÊ°à‰∏äÂÇ≥Â§±Êïó");
           });
-      }
-      function downloadFile(filename) {
+      };
+
+      const downloadFile = (filename) => {
         const sanitizedFilename = filename.startsWith("/")
           ? filename.slice(1)
           : filename;
         window.location.href = `/files?path=${sanitizedFilename}&download=true`;
-      }
-      function fetchFileContent() {
+      };
+
+      const fetchFileContent = () => {
         const filename = document.getElementById("fileSelect").value;
         fetch(`/files?path=${filename}&download=false`)
           .then((response) => response.text())
           .then((data) => {
             document.getElementById("fileContent").value = data;
           })
-          .catch((error) => {
-            alert("ERROR");
+          .catch(() => {
+            alert("ERROR fetching file content");
           });
-      }
-      function saveFile() {
+      };
+
+      const saveFile = () => {
         let filename = document.getElementById("fileSelect").value;
         const content = document.getElementById("fileContent").value;
         const formData = new FormData();
@@ -458,320 +527,231 @@
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "success") {
-              alert("¿…Æ◊¿x¶s¶®•\");
+              alert("Ê™îÊ°àÂÑ≤Â≠òÊàêÂäü");
             } else {
-              alert("¿x¶s•¢±—: " + data.message);
+              alert("ÂÑ≤Â≠òÂ§±Êïó: " + data.message);
             }
           })
-          .catch((error) => {
-            alert("¿…Æ◊¿x¶s•¢±—");
+          .catch(() => {
+            alert("Ê™îÊ°àÂÑ≤Â≠òÂ§±Êïó");
           });
-      }
-      function fetchWebDirectoryFiles(path = "") {
+      };
+
+      const fetchWebDirectoryFiles = (path = "") => {
         fetch(`/files?path=${path}`)
           .then((response) => response.json())
           .then((items) => {
             const fileList = document.getElementById("fileList");
-            fileList.innerHTML = ""; // ≤M™≈≤{¶≥¶C™Ì
+            fileList.innerHTML = "";
             items.forEach((item) => {
               const listItem = document.createElement("li");
+              const link = document.createElement("a");
+              link.href = "#";
               if (item.isDirectory) {
-                const link = document.createElement("a");
-                link.href = "#";
                 link.textContent = item.name;
-                link.style.color = "red"; // Æ⁄•ÿø˝§U™∫•ÿø˝¥´¶‚
+                link.style.color = "red";
                 link.onclick = () => {
                   fetchWebDirectoryFiles(`${path}/${item.name}`);
-                  return false; // ®æ§Ó¿qª{¶Ê¨∞
+                  return false;
                 };
-                listItem.appendChild(link);
               } else {
-                const link = document.createElement("a");
-                link.href = "#";
                 link.textContent = item.name;
                 link.onclick = () => {
                   downloadFile(`${path}/${item.name}`);
-                  return false; // ®æ§Ó¿qª{¶Ê¨∞
+                  return false;
                 };
-                listItem.appendChild(link);
               }
+              listItem.appendChild(link);
               fileList.appendChild(listItem);
             });
-            // ¶p™G¶≥§l•ÿø˝°A´h≈„•‹™¶^´ˆ∂s
             if (path) {
               const listItem = document.createElement("li");
               const link = document.createElement("a");
               link.href = "#";
-              link.textContent = "™¶^§Wºh";
+              link.textContent = "ËøîÂõû‰∏äÂ±§";
               link.onclick = () => {
-                fetchWebDirectoryFiles(path.split("/").slice(0, -1).join("/"));
+                const newPath = path.split("/").slice(0, -1).join("/");
+                fetchWebDirectoryFiles(newPath);
                 return false;
               };
               listItem.appendChild(link);
               fileList.insertBefore(listItem, fileList.firstChild);
             }
           })
-          .catch((error) => {
-            alert("µL™k¿Ú®˙ web •ÿø˝¿…Æ◊");
+          .catch(() => {
+            alert("ÁÑ°Ê≥ïÁç≤Âèñ web ÁõÆÈåÑÊ™îÊ°à");
           });
-      }
-      function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-          tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        if (evt) {
-          evt.currentTarget.className += " active";
-        }
-        document.getElementById(tabName).style.display = "block";
-      }
-      function fetchPanelData() {
-        const infoData = document.getElementById("info-data");
-        if (infoData === null) {
-          return;
-        }
-        fetch(`/panel`)
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              infoData.innerHTML = generateTable(data.data);
-            } else {
-              document.getElementById(
-                `info-data`
-              ).innerText = `error: ${data.message}`;
-            }
-          })
-          .catch((error) => {
-            document.getElementById(`info-data`).innerText = `error: ${error}`;
-          });
-      }
-      function sendCommand(command) {
-        fetch("/panel", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ command: command }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === "success") {
-              alert(`error: ${data.message}`);
-            } else {
-              alert(`success: ${data.message}`);
-            }
-          })
-          .catch((error) => {
-            alert(`success: ${error}`);
-          });
-      }
-      function generateTable(data) {
-        const units = {
-          temp: "¢XC",
-          power: "mW",
-          cpu: "%",
-          gpu: "%",
-          fan: "%",
-          ram: "%",
-          swap: "%",
-        };
+      };
 
-        let table = "<table>";
-        for (let key in data) {
-          let unit = "";
-          // ®œ•Œ≥°§¿§«∞t®”≤K•[≥Ê¶Ï
-          for (let unitKey in units) {
-            if (key.toLowerCase().includes(unitKey)) {
-              unit = ` ${units[unitKey]}`;
-              break;
-            }
-          }
-          table += `<tr><th>${key}</th><td>${data[key]}${unit}</td></tr>`;
-        }
-        table += "</table>";
-        return table;
-      }
-      // ≥B≤z Tab ¡‰øÈ§J
-      function handleTab(event) {
-        if (event.key === "Tab") {
-          event.preventDefault(); // ®æ§Ó Tab §¡¥´µJ¬I
-          var textarea = event.target;
-          var start = textarea.selectionStart;
-          var end = textarea.selectionEnd;
+      /* ========================
+         Camera Functions
+         ======================== */
+      const toggleCamera = (cameraId) => {
+        const toggleElement = document.getElementById(`camera${cameraId}Toggle`);
+        const status = toggleElement.checked;
+        // Implement the logic to handle camera toggle as needed
+        console.log(`Camera ${cameraId} toggled to ${status}`);
+      };
 
-          // ¶bøÔ§§™∫Ωd≥Ú¥°§J®Ó™Ì≤≈ (Tab)
-          textarea.value =
-            textarea.value.substring(0, start) +
-            "    " +
-            textarea.value.substring(end);
-
-          // ±N•˙º–≤æ∞ ®Ï¥°§J™∫¶Ï∏m
-          textarea.selectionStart = textarea.selectionEnd = start + 4;
-        }
-      }
-      function fetchCameraSettings() {
+      const fetchCameraSettings = () => {
         fetch("/cameras?command=config")
           .then((response) => response.json())
           .then((data) => {
-            if (data.status === "success") {
-              if (data === null) {
-                return;
-              }
-              const settings = data.data;
-              // ¶b≥o∏Ã≥B≤z±µ¶¨®Ï™∫≥]©w∏ÍÆ∆
-              console.log(settings);
-              // ®“¶p°AßÛ∑s´e∫›™∫≈„•‹
-              updateCameraSettingsTable(settings);
+            if (data.status === "success" && data.data) {
+              updateCameraSettingsTable(data.data);
             } else {
-              alert("¿Ú®˙≥]©w•¢±—: " + data.message);
+              alert("Áç≤ÂèñË®≠ÂÆöÂ§±Êïó: " + data.message);
             }
           })
           .catch((error) => {
-            alert("¿Ú®˙≥]©w•¢±—: " + error);
+            alert("Áç≤ÂèñË®≠ÂÆöÂ§±Êïó: " + error);
           });
-      }
+      };
 
-      function updateCameraSettingsTable(settings) {
-        for (let cameraId in settings) {
-          const camera = settings[cameraId];
-          const table = document.getElementById(
-            `camera${cameraId}SettingsTable`
-          );
-          if (table === null) {
-            return;
-          }
-          table.innerHTML = `
-                <tr>
-                    <td>enabled</td>
-                    <td><input type="checkbox" ${
-                      camera.enabled ? "checked" : ""
-                    } onchange="updateSetting('${cameraId}', 'enabled', this.checked)"></td>
-                </tr>
-                <tr>
-                    <td>name</td>
-                    <td><input type="text" value="${
-                      camera.name
-                    }" onchange="updateSetting('${cameraId}', 'name', this.value)"></td>
-                </tr>
-                <tr>
-                    <td>path</td>
-                    <td><input type="text" value="${
-                      camera.path
-                    }" onchange="updateSetting('${cameraId}', 'path', this.value)"></td>
-                </tr>
-                ${
-                  camera.enabled &&
-                  camera.settings &&
-                  Array.isArray(camera.settings.properties) &&
-                  camera.settings.properties.length > 0
-                    ? camera.settings.properties
-                        .map(
-                          (property) => `
-                        <tr>
-                            <td>${property.name}</td>
-                            <td><input type="text" value="${property.value}" onchange="updateProperty('${cameraId}', '${property.name}', this.value)"></td>
-                        </tr>
-                    `
-                        )
-                        .join("")
-                    : '<tr><td colspan="2">No properties available for this camera.</td></tr>'
-                }
+      const updateCameraSettingsTable = (settings) => {
+        for (const cameraId in settings) {
+          if (settings.hasOwnProperty(cameraId)) {
+            const camera = settings[cameraId];
+            const table = document.getElementById(`camera${cameraId}SettingsTable`);
+            if (!table) continue;
+            let tableHTML = `
+              <tr>
+                <td>enabled</td>
+                <td>
+                  <input type="checkbox" ${camera.enabled ? "checked" : ""} onchange="updateSetting('${cameraId}', 'enabled', this.checked)">
+                </td>
+              </tr>
+              <tr>
+                <td>name</td>
+                <td>
+                  <input type="text" value="${camera.name}" onchange="updateSetting('${cameraId}', 'name', this.value)">
+                </td>
+              </tr>
+              <tr>
+                <td>path</td>
+                <td>
+                  <input type="text" value="${camera.path}" onchange="updateSetting('${cameraId}', 'path', this.value)">
+                </td>
+              </tr>
             `;
+            if (
+              camera.enabled &&
+              camera.settings &&
+              Array.isArray(camera.settings.properties) &&
+              camera.settings.properties.length > 0
+            ) {
+              tableHTML += camera.settings.properties
+                .map(
+                  (property) => `
+                <tr>
+                  <td>${property.name}</td>
+                  <td>
+                    <input type="text" value="${property.value}" onchange="updateProperty('${cameraId}', '${property.name}', this.value)">
+                  </td>
+                </tr>
+              `
+                )
+                .join("");
+            } else {
+              tableHTML += `<tr><td colspan="2">No properties available for this camera.</td></tr>`;
+            }
+            table.innerHTML = tableHTML;
+          }
         }
-      }
+      };
 
-      function updateSetting(cameraId, setting, value) {
-        // ¶b≥o∏Ã≥B≤z≥]©wßÛ∑s≈ﬁøË°A®“¶pµo∞e®Ï´·∫›
-        console.log(
-          `Camera ${cameraId} setting ${setting} updated to ${value}`
-        );
-      }
+      // These functions update settings locally and can be extended to send immediate updates
+      const updateSetting = (cameraId, setting, value) => {
+        console.log(`Camera ${cameraId} setting ${setting} updated to ${value}`);
+      };
 
-      function updateProperty(cameraId, property, value) {
-        // ¶b≥o∏Ã≥B≤zƒ›© ßÛ∑s≈ﬁøË°A®“¶pµo∞e®Ï´·∫›
-        console.log(
-          `Camera ${cameraId} property ${property} updated to ${value}`
-        );
-      }
-      function saveSetting() {
+      const updateProperty = (cameraId, property, value) => {
+        console.log(`Camera ${cameraId} property ${property} updated to ${value}`);
+      };
+
+      const saveSetting = () => {
         const settings = {};
         const cameraIds = ["1", "2", "3"];
+        const configKeys = ["enabled", "name", "path"];
 
         cameraIds.forEach((cameraId) => {
-          const cameraSettings = {};
-          const table = document.getElementById(cameraId);
-
+          const table = document.getElementById(`camera${cameraId}SettingsTable`);
+          if (!table) return;
           const rows = table.getElementsByTagName("tr");
+          let cameraSettings = {};
+          let properties = [];
 
           for (let i = 0; i < rows.length; i++) {
             const cells = rows[i].getElementsByTagName("td");
-            if (cells.length === 2) {
-              const key = cells[0].innerText;
-              const input = cells[1].getElementsByTagName("input")[0];
-              if (input) {
-                const value =
-                  input.type === "checkbox" ? input.checked : input.value;
-                cameraSettings[key] = value;
+            if (cells.length < 2) continue;
+            const key = cells[0].innerText.trim();
+            const input = cells[1].querySelector("input");
+            if (!input) continue;
+            let value = input.type === "checkbox" ? input.checked : input.value;
+            // Convert numeric strings to numbers if applicable
+            if (input.type !== "checkbox" && !isNaN(value) && value.trim() !== "") {
+              if (/^-?\d+(\.\d+)?$/.test(value)) {
+                value = value.indexOf(".") !== -1 ? parseFloat(value) : parseInt(value);
               }
             }
+            if (configKeys.includes(key)) {
+              cameraSettings[key] = value;
+            } else {
+              properties.push({ name: key, value: value });
+            }
           }
-
+          if (properties.length > 0) {
+            cameraSettings.settings = { properties: properties };
+          }
           settings[cameraId] = cameraSettings;
         });
 
         fetch("/cameras", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ command: "setting", data: settings }),
         })
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "success") {
-              alert("saving successful");
+              alert("Saving successful");
             } else {
-              alert("saving failed: " + data.message);
+              alert("Saving failed: " + data.message);
             }
           })
           .catch((error) => {
-            alert("saving error: " + error);
+            alert("Saving error: " + error);
           });
-      }
+      };
 
-      function resetSetting() {
+      const resetSetting = () => {
         fetch("/cameras", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ command: "replace" }),
         })
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "success") {
-              alert("success");
+              alert("Reset successful");
+              fetchCameraSettings();
             } else {
-              alert("failed: " + data.message);
+              alert("Reset failed: " + data.message);
             }
           })
           .catch((error) => {
-            alert("error: "+ error);
+            alert("Reset error: " + error);
           });
+      };
 
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
+      /* ========================
+         Initialization
+         ======================== */
+      document.addEventListener("DOMContentLoaded", () => {
+        // Load default view (Panel) and fetch initial camera settings
+        loadContent("Panel");
         fetchCameraSettings();
       });
-    </script>
-    <script>
-      loadContent("Panel");
     </script>
   </body>
 </html>
